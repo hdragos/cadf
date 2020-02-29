@@ -1,0 +1,27 @@
+{
+  "type": "create_learning_strategy",
+
+  "data": {
+
+    "name": "Stepper_5_10",
+
+    "description": "Divide the learning rate by 10^2 on steps 5 and 10",
+
+    "structure": {
+      "type": "StepLearningStrategy",
+
+      "initial_lr": 0.01,
+
+      "steps": [
+        {
+          "epoch": 5,
+          "new_lr": 0.0001
+        },
+        {
+          "epoch": 10,
+          "new_lr": 0.00001
+        }
+      ]
+    }
+  }
+}

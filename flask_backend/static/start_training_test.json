@@ -1,0 +1,20 @@
+{
+  "type": "",
+
+  "data": {
+
+      "name": "Test_MNIST_training_session",
+
+      "description": "Test a neural network on the MNIST dataset",
+
+      "epochs": 1,
+
+      "clean_dataset_id": 1,
+
+      "noisy_dataset_id": 2,
+
+      "denoiser_id": 1,
+
+      "learning_strategy_id" : null
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "create_noise_generator",
+
+  "data": {
+
+    "name": "Gaussian Noise Generator",
+
+    "description": "A simple gaussian noise generator.",
+
+    "structure" : {
+
+        "type": "GaussianNoiseGenerator",
+
+        "noise_sigma": 0.3
+    }
+  }
+}

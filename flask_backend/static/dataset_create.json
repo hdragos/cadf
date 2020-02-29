@@ -1,0 +1,10 @@
+{
+  "type": "create_dataset",
+
+  "data": {
+
+    "name": "MNIST_Dataset_clean",
+
+    "description": "The clean dataset of MNIST handwritten digits."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "run_prediction_dataset",
+
+  "data": {
+
+    "training_session_id": 1,
+
+    "dataset_id": 1,
+
+    "samples": 5
+
+  }
+}

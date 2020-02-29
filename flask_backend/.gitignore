@@ -1,0 +1,15 @@
+# Static files to ignore
+/static/react
+/static/DATASETS
+/static/DENOISERS
+/static/TRAINING_SESSIONS
+/static/LEARNING_STRATEGIES
+
+# Database files
+*.db
+
+# Database migrations
+/migrations
+
+# Archives
+*.zip
