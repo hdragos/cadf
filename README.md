@@ -1,14 +1,14 @@
-#Convolutional autoencoder denoising framework
+# Convolutional autoencoder denoising framework
 
-##What is this
+## What is this
 CADF (Convolutional autoencoder denoising framework) is a web application that permits the denoising of images using
 convolutional autencoders. It also can manage datasets and convolutional autoencoders.
 
 This web application uses a client-server architecture.
 
-##Installation
+## Installation
 
-###Frontend
+### Frontend
 The client is written in Javascript using the React framework. The client is located in 
 `/flask_backend/templates/index.html` but in order to further develop the client, the following commands need to be run.
 
@@ -19,13 +19,13 @@ npm run-script build
 ```
 
 
-###Backend
+### Backend
 The backend is written in Python using the Flask web framework and Keras (with Tensorflow backend) for the deep learning
 part.
 
-##Documentation
+## Documentation
 
-###Core concepts
+### Core concepts
 
 The main concepts in the application are __Denoisers__, __Datasets__ and __Training sessions__.
 
