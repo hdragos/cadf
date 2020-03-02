@@ -88,7 +88,7 @@ def create_learning_strategy():
 
 @app.route('/datasets', methods=['GET'])
 def preview_datasets():
-    service.get_datasets()
+    return service.get_datasets()
 
 
 @app.route('/denoisers', methods=['GET'])
