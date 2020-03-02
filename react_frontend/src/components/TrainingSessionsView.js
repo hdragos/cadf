@@ -50,30 +50,14 @@ class TrainingSessionForm extends Component {
 class TrainingSessionsView extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            training_sessions: [],
-        };
     };
-
-    fetchData = () => {
-        fetch(`${httpAddress}/training_sessions`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({training_sessions: responseJson});
-            })
-            .catch((error) => {
-                console.log("Error while fetching messages from the server. Reason: ", error)
-            });
-    };
-
 
     componentDidMount() {
         console.log("TrainingSessionsView successfully mounted.");
-        this.fetchData();
     }
 
     render() {
-        const {training_sessions} = this.state;
+        const {training_sessions} = this.props;
 
         return <div>
             <ul style={styles.training_sessionsList}>

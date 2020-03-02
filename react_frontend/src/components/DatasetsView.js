@@ -54,30 +54,14 @@ class DatasetForm extends Component {
 class DatasetsView extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            datasets: [],
-        };
     };
-
-    fetchData = () => {
-        fetch(`${httpAddress}/datasets`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({datasets: responseJson});
-            })
-            .catch((error) => {
-                console.log("Error while fetching messages from the server. Reason: ", error)
-            });
-    };
-
 
     componentDidMount() {
         console.log("DatasetsView successfully mounted.");
-        this.fetchData();
     }
 
     render() {
-        const {datasets} = this.state;
+        const {datasets} = this.props;
 
         return <div>
             <ul style={styles.datasetsList}>

@@ -7,37 +7,42 @@ import TrainingSessionsView from "./TrainingSessionsView"
 class ToolbarMenu extends Component {
     constructor(props){
         super(props);
+        this.fetchData = props.fetchData;
         this.state = {
-            currentScreen: "HOME"
+            currentScreen: "home",
+            denoisers: [],
+            datasets: [],
+            training_sessions: [],
         };
     }
 
-    handleScreenChange = (screenName) => {
-        this.setState({currentScreen: screenName});
+    handleScreenChange = (resource) => {
+        this.setState({currentScreen: resource});
+        this.fetchData(resource)
     };
 
     render() {
-        const {currentScreen} = this.state;
+        const {currentScreen, datasets, denoisers, training_sessions} = this.state;
 
         return (
             <div>
                 <ul style={styles.toolbar}>
                     <li>
-                        <button onClick={() => this.handleScreenChange("DENOISERS")}
+                        <button onClick={() => this.handleScreenChange("denoisers")}
                                 style={styles.button}>DENOISERS</button>
                     </li>
                     <li>
-                        <button onClick={() => this.handleScreenChange("DATASETS")}
+                        <button onClick={() => this.handleScreenChange("datasets")}
                                 style={styles.button}>DATASETS</button>
                     </li>
                     <li>
-                        <button onClick={() => this.handleScreenChange("TRAINING SESSIONS")}
+                        <button onClick={() => this.handleScreenChange("training_sessions")}
                                 style={styles.button}>TRAINING SESSIONS</button>
                     </li>
                 </ul>
-                {(currentScreen === "DATASETS") && <DatasetsView/>}
-                {(currentScreen === "DENOISERS") && <DenoisersView/>}
-                {(currentScreen === "TRAINING SESSIONS" && <TrainingSessionsView/>)}
+                {(currentScreen === "datasets") && <DatasetsView datasets={datasets}/>}
+                {(currentScreen === "denoisers") && <DenoisersView denoisers={denoisers}/>}
+                {(currentScreen === "training_sessions" && <TrainingSessionsView training_sessions={training_sessions}/>)}
             </div>
         );
     }

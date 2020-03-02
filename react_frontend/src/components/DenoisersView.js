@@ -20,30 +20,14 @@ class DenoiserView extends Component{
 class DenoisersView extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            denoisers: [],
-        };
     };
-
-    fetchData = () => {
-        fetch(`${httpAddress}/denoisers`)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({denoisers: responseJson});
-            })
-            .catch((error) => {
-                console.log("Error while fetching messages from the server. Reason: ", error)
-            });
-    };
-
 
     componentDidMount() {
         console.log("DenoisersView successfully mounted.");
-        this.fetchData();
     }
 
     render() {
-        const {denoisers} = this.state;
+        const {denoisers} = this.props;
 
         return <div>
             <ul style={styles.denoisersList}>
