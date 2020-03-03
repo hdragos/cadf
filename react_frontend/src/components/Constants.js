@@ -25,7 +25,7 @@ const listElementStyle = {
     borderRadius: '15px',
     padding: '5px',
     margin: '5px',
-    width: '90%',
+    width: '95%',
 };
 
 export {theme, serverAddress, httpAddress, wsAddress, listContainerStyle, listElementStyle}

@@ -7,8 +7,6 @@ class TrainingSessionView extends Component{
     }
 
     render() {
-        console.log(this.props);
-
         const {trainingSession} = this.props;
 
         return <div style={styles.trainingSessionView}>

@@ -14,7 +14,6 @@ class AppStore extends Component {
 
     componentDidMount() {
         this.fetchData();
-        console.log(this.state);
     }
 
     fetchData(resourceName) {
@@ -23,7 +22,6 @@ class AppStore extends Component {
             .then((responseJson) => {
                 let newData = {};
                 newData[resourceName] = responseJson;
-                console.log(newData);
                 this.setState(newData);
             })
             .catch((error) => {
@@ -32,6 +30,7 @@ class AppStore extends Component {
     }
 
     render() {
+        console.log(this.state);
         return <ToolbarMenu
             fetchData = {this.fetchData}
         />
