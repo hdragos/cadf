@@ -50,6 +50,19 @@ class DatasetForm extends Component {
 
         console.log(formData);
 
+        fetch(`${httpAddress}/datasets`, {
+            mode: 'no-cors',
+            method: 'POST',
+            body: formData
+        })
+        //TO DO: Handle responses accordingly
+            .then((response) => {
+                console.log(`Received response: ${response}`);
+            })
+            .catch((error) => {
+                console.log("Error while fetching messages from the server. Reason: ", error)
+            });
+
         event.preventDefault();
     };
 
