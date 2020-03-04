@@ -12,6 +12,7 @@ class TrainingSessionView extends Component{
         return <div style={styles.trainingSessionView}>
             <p>TrainingSession ID: {trainingSession.id}</p>
             <p>TrainingSession name: {trainingSession.name}</p>
+            <button>Run training session</button>
         </div>
     }
 }
