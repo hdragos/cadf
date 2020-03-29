@@ -1,0 +1,112 @@
+{
+      "type": "Convolutional2DAutoencoder",
+
+      "input_shape": [
+        28,
+        28,
+        1
+      ],
+
+      "optimizer": "adadelta",
+
+      "loss_function": "mean_squared_error",
+
+      "encoder_layers": [
+        {
+          "type": "Conv2D",
+          "filters": 32,
+          "kernel_size": [
+            5,
+            5
+          ],
+          "activation": "relu",
+          "padding": "same",
+          "data_format": null
+        },
+        {
+          "type": "MaxPooling2D",
+          "pool_size": [
+            2,
+            2
+          ],
+          "strides": null,
+          "padding": "same",
+          "data_format": null
+        },
+        {
+          "type": "Conv2D",
+          "filters": 64,
+          "kernel_size": [
+            5,
+            5
+          ],
+          "activation": "relu",
+          "padding": "same",
+          "data_format": null
+        },
+        {
+          "type": "MaxPooling2D",
+          "pool_size": [
+            2,
+            2
+          ],
+          "strides": null,
+          "padding": "same",
+          "data_format": null
+        }
+      ],
+
+      "decoder_layers": [
+        {
+          "type": "Conv2D",
+          "filters": 64,
+          "kernel_size": [
+            5,
+            5
+          ],
+          "activation": "relu",
+          "padding": "same",
+          "data_format": null
+        },
+        {
+          "type": "UpSampling2D",
+          "size": [
+            2,
+            2
+          ],
+          "data_format": null,
+          "interpolation": "nearest"
+        },
+        {
+          "type": "Conv2D",
+          "filters": 32,
+          "kernel_size": [
+            5,
+            5
+          ],
+          "activation": "relu",
+          "padding": "same",
+          "data_format": null
+        },
+        {
+          "type": "UpSampling2D",
+          "size": [
+            2,
+            2
+          ],
+          "data_format": null,
+          "interpolation": "nearest"
+        },
+        {
+          "type": "Conv2D",
+          "filters": 1,
+          "kernel_size": [
+            5,
+            5
+          ],
+          "activation": "relu",
+          "padding": "same",
+          "data_format": null
+        }
+      ]
+    }

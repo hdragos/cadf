@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
+import {handleFormFileChange, handleFormTextChange, handleFormFileContentChange} from "./Utils";
 
 class DenoiserView extends Component{
     constructor(props){
@@ -17,72 +18,84 @@ class DenoiserView extends Component{
     }
 }
 
-class LayersList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            layers: []
-        }
-    }
 
-    render() {
+class DenoiserForm extends Component {
 
-
-        return <div>
-            <ul>
-
-            </ul>
-            <button>
-                Add new layer
-            </button>
-        </div>
-    }
-}
-
-class LayerProperties extends Component {
-    render() {
-        return <p>Layer props</p>
-    }
-}
-
-class LayerForm extends Component {
-    render() {
-        return <p>Layer</p>
-    }
-}
-
-
-class DenoisersForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-          denoiserName: null,
-          denoiserDescription: null,
-          denoiserTrainable: true,
-          denoiserStructure: {
-              type: null,
-              input_shape: null,
-              optimizer: null,
-              loss_function: null,
-          }
+            denoiserName: null,
+            denoiserDescription: null,
+            denoiserTrainable: true,
+            denoiserStructureFile: null,
+            denoiserStructure: null,
+            fileReader: new FileReader(),
         };
+
+        this.handleFormTextChange = handleFormTextChange.bind(this);
+        this.handleFormFileChange = handleFormFileChange.bind(this);
+        this.handleFormFileContentChange = handleFormFileContentChange.bind(this);
     }
 
     handleSubmit = (event) => {
-        alert("Form submission!");
+        const { denoiserName, denoiserDescription, denoiserTrainable, denoiserStructure } = this.state;
+        let structure = JSON.parse(denoiserStructure);
+
+        let formData = new FormData();
+        let metadataDict =
+            {
+                "type": "create_denoiser",
+                "data": {
+                    "name": denoiserName,
+                    "description": denoiserDescription,
+                    "trainable": denoiserTrainable,
+                    structure
+                }
+            };
+
+        formData.append('metadata', JSON.stringify(metadataDict));
+
+        fetch(`${httpAddress}/denoisers`, {
+            mode: 'no-cors',
+            method: 'POST',
+            body: formData
+        })
+        //TO DO: Handle responses accordingly
+            .then((response) => {
+                console.log(`Received response: ${response}`);
+            })
+            .catch((error) => {
+                console.log("Error while fetching messages from the server. Reason: ", error)
+            });
         event.preventDefault();
     };
 
     render() {
+        const {fileReader} = this.state;
 
-        return <form onSubmit={(event) => this.handleSubmit(event)}>
+        return <form onSubmit={(event) => this.handleSubmit(event)}
+            style={styles.denoiserPreview}
+            encType="multipart/form-data"
+            >
             <h1>Upload a new denoiser:</h1>
             <label>Name:</label>
             <input
                 type="text"
                 value={this.state.denoiserName}
+                onChange={(event) => this.handleFormTextChange(event, 'denoiserName')}
             />
-            <LayersList/>
+            <label>Description:</label>
+            <input
+                type="text"
+                value={this.state.denoiserDescription}
+                onChange={(event) => this.handleFormTextChange(event, 'denoiserDescription')}
+            />
+            <label>Structure file:</label>
+            <input
+                type="file"
+                onChange={(event) => this.handleFormFileContentChange(event, 'denoiserStructureFile', 'denoiserStructure', fileReader)}
+                name='denoiserStructureFile'
+            />
             <input type="submit" value="Submit"/>
         </form>
     }
@@ -109,9 +122,7 @@ class DenoisersView extends Component{
                     />
                 ))}
             </ul>
-            <div>
-                <p>Dataset preview placeholder</p>
-            </div>
+            <DenoiserForm/>
         </div>
     }
 }
