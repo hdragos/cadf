@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
+import {handleFormTextChange, handleFormFileChange} from "./Utils";
 
 class DatasetView extends Component{
     constructor(props){
@@ -24,31 +25,18 @@ class DatasetForm extends Component {
           datasetDescription: null,
           datasetArchive: null
         };
-    }
 
-    handleTextChange(event, stateName){
-        let newState = {};
-        newState[stateName] = event.target.value;
-        this.setState(newState);
-    }
-
-    handleFileChange(event, stateName){
-        let newState = {};
-        newState[stateName] = event.target.files[0];
-        this.setState(newState);
-        event.preventDefault();
+        this.handleFormFileChange = handleFormFileChange.bind(this);
+        this.handleFormTextChange = handleFormTextChange.bind(this);
     }
 
     handleSubmit = (event) => {
         const { datasetName, datasetDescription, datasetArchive } = this.state;
-        console.log(datasetArchive);
 
         let formData = new FormData();
         let metadataDict = {"type": "create_dataset", "data": {"name": datasetName, "description": datasetDescription}};
         formData.append('metadata', JSON.stringify(metadataDict));
         formData.append('dataset', datasetArchive);
-
-        console.log(formData);
 
         fetch(`${httpAddress}/datasets`, {
             mode: 'no-cors',
@@ -79,18 +67,18 @@ class DatasetForm extends Component {
             <input
                 type="text"
                 value={this.state.datasetName}
-                onChange={(event) => this.handleTextChange(event, 'datasetName')}
+                onChange={(event) => this.handleFormTextChange(event, 'datasetName')}
             />
 
             <label>Description:</label>
             <input
                 type="text"
                 value={this.state.datasetDescription}
-                onChange={(event) => this.handleTextChange(event, 'datasetDescription')}
+                onChange={(event) => this.handleFormTextChange(event, 'datasetDescription')}
             />
             <input
                 type="file"
-                onChange={(event) => this.handleFileChange(event, 'datasetArchive')}
+                onChange={(event) => this.handleFormFileChange(event, 'datasetArchive')}
                 name='datasetArchive'
             />
 
