@@ -191,7 +191,7 @@ class Service:
                 epochs=training_session.epochs,
                 batch_size=1,
                 save_path=weights_save_path,
-                custom_callbacks=[LoggerCallback()]
+                custom_callbacks=[]
             )
 
             n = 5
