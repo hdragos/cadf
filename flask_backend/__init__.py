@@ -4,6 +4,7 @@ import os
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 
@@ -18,6 +19,7 @@ app.config.from_mapping(
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+socketio = SocketIO(app)
 
 app.config['DATA_FOLDER'] = 'D:\\University\\DenoisingDegree\\flask_backend\\static'
 data_folders = ['DENOISERS', 'DATASETS', 'TRAINING_SESSIONS', 'LEARNING_STRATEGIES']
@@ -29,5 +31,4 @@ for folder in data_folders:
 
 from flask_backend import routes, model
 
-
-app.run(debug=True)
+socketio.run(app=app, debug=True)
