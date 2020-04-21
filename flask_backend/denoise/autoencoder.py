@@ -1,7 +1,5 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data
-import matplotlib.pyplot as plt
 
 from flask_backend.denoise.denoiser import ConvolutionalAutoencoderDenoiser
 from flask_backend.denoise.noise_utils import GaussianNoiseGenerator2D
