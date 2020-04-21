@@ -1,13 +1,15 @@
-from flask import request, render_template, session
+from flask import request, render_template
 import json
 import os
 
 from flask_backend import db, app
 from flask_backend.model import Denoiser, Dataset, LearningStrategy, TrainingSession
 
-from flask_backend.service import Service
+from flask_backend.services.main_service import MainService
+import socketio
 
-service = Service(
+
+service = MainService(
     app=app,
     db=db,
     Denoiser=Denoiser,

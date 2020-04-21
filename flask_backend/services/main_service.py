@@ -8,10 +8,9 @@ import cv2
 import os
 import tensorflow as tf
 from flask_backend.utils import comparison_plot
-from flask_backend.callbacks import LoggerCallback
 
 
-class Service:
+class MainService:
     def __init__(self, app, db, Dataset, Denoiser, TrainingSession):
         """
         The denoiser server service.
@@ -157,12 +156,16 @@ class Service:
             clean_dataset: Dataset,
             noisy_dataset: Dataset,
             trainable_denoiser: Denoiser,
-            leaning_strategy: LearningStrategy = None
+            leaning_strategy: LearningStrategy = None,
+            custom_callbacks=None
     ):
 
         print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-        if trainable_denoiser.trainable != True:
+        if custom_callbacks is None:
+            custom_callbacks = []
+
+        if trainable_denoiser.trainable is not True:
             raise Exception("Denoiser {0} is untrainable!".format(trainable_denoiser))
 
         with open(trainable_denoiser.save_path) as denoiser_structure_fp:
@@ -191,7 +194,7 @@ class Service:
                 epochs=training_session.epochs,
                 batch_size=1,
                 save_path=weights_save_path,
-                custom_callbacks=[]
+                custom_callbacks=custom_callbacks
             )
 
             n = 5
