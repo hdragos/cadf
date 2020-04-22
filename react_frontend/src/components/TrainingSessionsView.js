@@ -1,10 +1,15 @@
 import React, {Component} from 'react'
-import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
+import {theme, httpAddress, listElementStyle, listContainerStyle, wsAddress} from "./Constants";
 import {handleFormFileChange, handleFormFileContentChange, handleFormTextChange} from "./Utils";
+import io from 'socket.io-client'
 
 class TrainingSessionView extends Component{
     constructor(props){
         super(props);
+    }
+
+    componentDidMount() {
+        this.socket = io("http://127.0.0.1:5000");
     }
 
     render() {
@@ -13,8 +18,21 @@ class TrainingSessionView extends Component{
         return <div style={styles.trainingSessionView}>
             <p>TrainingSession ID: {trainingSession.id}</p>
             <p>TrainingSession name: {trainingSession.name}</p>
-            <button>Run training session</button>
+            <button onClick={this.handleRunTrainignSession}>
+                Run training session
+            </button>
         </div>
+    }
+
+    handleRunTrainignSession = (event) => {
+        const {trainingSession} = this.props;
+        const socket = this.socket;
+
+        socket.emit(
+            'run_single_training_session',
+            {
+                'training_session_id': trainingSession.id
+            })
     }
 }
 
