@@ -8,31 +8,16 @@ class TrainingSessionView extends Component{
         super(props);
     }
 
-    componentDidMount() {
-        this.socket = io("http://127.0.0.1:5000");
-    }
-
     render() {
-        const {trainingSession} = this.props;
+        const {trainingSession, handleRunTrainingSession, socket} = this.props;
 
         return <div style={styles.trainingSessionView}>
             <p>TrainingSession ID: {trainingSession.id}</p>
             <p>TrainingSession name: {trainingSession.name}</p>
-            <button onClick={this.handleRunTrainignSession}>
+            <button onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
                 Run training session
             </button>
         </div>
-    }
-
-    handleRunTrainignSession = (event) => {
-        const {trainingSession} = this.props;
-        const socket = this.socket;
-
-        socket.emit(
-            'run_single_training_session',
-            {
-                'training_session_id': trainingSession.id
-            })
     }
 }
 
@@ -142,16 +127,34 @@ class TrainingSessionsView extends Component{
 
     componentDidMount() {
         console.log("TrainingSessionsView successfully mounted.");
+
+        this.socket = io("http://127.0.0.1:5000");
+        this.socket.on(
+            'update_training_data',
+            data => {console.log('Received data' + data + ' from the server!')}
+        );
+    }
+
+    handleRunTrainignSession = (socket, trainingSessionId) => {
+        socket.emit(
+            'run_single_training_session',
+            {
+                'training_session_id': trainingSessionId
+            })
     }
 
     render() {
         const {training_sessions} = this.props;
+        const socket = this.socket
+        const handleRunTrainingSession = this.handleRunTrainignSession;
 
         return <div>
             <ul style={styles.training_sessionsList}>
                 {training_sessions.map(trainingSession => (
                     <TrainingSessionView
                         trainingSession={trainingSession}
+                        handleRunTrainingSession={handleRunTrainingSession}
+                        socket={socket}
                     />
                 ))}
             </ul>

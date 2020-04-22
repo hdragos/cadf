@@ -129,6 +129,7 @@ def handle_single_training_session(json_request):
 
         training_session_id = json_request['training_session_id']
         # service.run_single_training_session(training_session_id)
+        socketio.emit('update_training_data', 'Hey pal, update your UI!')
         return render_template('success.html')
 
     except Exception as exception:
