@@ -2,13 +2,10 @@ from flask import request, render_template
 import json
 import os
 
-from flask_backend import db, app
+from flask_backend import db, app, socketio
+
 from flask_backend.model import Denoiser, Dataset, LearningStrategy, TrainingSession
-
 from flask_backend.services.main_service import MainService
-import socketio
-
-sio = socketio.Server()
 
 service = MainService(
     app=app,
@@ -124,20 +121,18 @@ def delete_training_session(training_session_id):
     pass
 
 
-@sio.on('run_single_training_session')
-def handle_single_training_session(sid, data):
+@socketio.on('run_single_training_session')
+def handle_single_training_session(json_request):
     try:
 
-        print("Received a socket.io event with the sid={0} and the data={1}".format(sid, data))
+        print("Received a socket.io event with the data={0}".format(json_request))
 
-        training_session_id = data['training_session_id']
-        service.run_single_training_session(training_session_id)
+        training_session_id = json_request['training_session_id']
+        # service.run_single_training_session(training_session_id)
         return render_template('success.html')
 
     except Exception as exception:
         print(exception)
-
-    return None
 
 
 @app.route('/training_sessions/run/<training_session_id>', methods=['GET', 'POST'])
