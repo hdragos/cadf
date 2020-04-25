@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle, wsAddress} from "./Constants";
 import {handleFormFileChange, handleFormFileContentChange, handleFormTextChange} from "./Utils";
 import io from 'socket.io-client'
+import Button from 'react-bootstrap/Button'
 
 class TrainingSessionView extends Component{
     constructor(props){
@@ -14,9 +15,11 @@ class TrainingSessionView extends Component{
         return <div style={styles.trainingSessionView}>
             <p>TrainingSession ID: {trainingSession.id}</p>
             <p>TrainingSession name: {trainingSession.name}</p>
-            <button onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
+            <Button
+                variant="primary"
+                onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
                 Run training session
-            </button>
+            </Button>
         </div>
     }
 }

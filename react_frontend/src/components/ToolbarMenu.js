@@ -3,6 +3,8 @@ import {theme} from "./Constants";
 import DatasetsView from "./DatasetsView"
 import DenoisersView from "./DenoisersView";
 import TrainingSessionsView from "./TrainingSessionsView"
+import Navbar from 'react-bootstrap/Navbar'
+import NavbarLink from 'react-bootstrap/Navbar'
 
 class ToolbarMenu extends Component {
     constructor(props){
@@ -26,20 +28,20 @@ class ToolbarMenu extends Component {
 
         return (
             <div>
-                <ul style={styles.toolbar}>
+                <Navbar style={styles.toolbar}>
                     <li>
-                        <button onClick={() => this.handleScreenChange("denoisers")}
-                                style={styles.button}>DENOISERS</button>
+                        <NavbarLink onClick={() => this.handleScreenChange("denoisers")}
+                                style={styles.button}>DENOISERS</NavbarLink>
                     </li>
                     <li>
-                        <button onClick={() => this.handleScreenChange("datasets")}
-                                style={styles.button}>DATASETS</button>
+                        <NavbarLink onClick={() => this.handleScreenChange("datasets")}
+                                style={styles.button}>DATASETS</NavbarLink>
                     </li>
                     <li>
-                        <button onClick={() => this.handleScreenChange("training_sessions")}
-                                style={styles.button}>TRAINING SESSIONS</button>
+                        <NavbarLink onClick={() => this.handleScreenChange("training_sessions")}
+                                style={styles.button}>TRAINING SESSIONS</NavbarLink>
                     </li>
-                </ul>
+                </Navbar>
                 {(currentScreen === "datasets") && <DatasetsView datasets={datasets}/>}
                 {(currentScreen === "denoisers") && <DenoisersView denoisers={denoisers}/>}
                 {(currentScreen === "training_sessions" && <TrainingSessionsView training_sessions={training_sessions}/>)}
