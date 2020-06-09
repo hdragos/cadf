@@ -149,6 +149,11 @@ class MainService:
             denoiser=denoiser
         )
 
+    def predict_single_image(self, json_request, raw_image):
+        image = raw_image
+        print("Predict single image endpoint hit")
+        pass
+
     # TO DO: refactor, account 'Failed to get device attribute 13 for device 0' error
     def run_training_session(
             self,
@@ -208,7 +213,6 @@ class MainService:
 
         tf.keras.backend.clear_session()
 
-    # TO DO: refactor, account 'Failed to get device attribute 13 for device 0' error
     def run_prediction_dataset(
             self,
             training_session: TrainingSession,

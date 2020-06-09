@@ -128,7 +128,7 @@ def handle_single_training_session(json_request):
         print("Received a socket.io event with the data={0}".format(json_request))
 
         training_session_id = json_request['training_session_id']
-        # service.run_single_training_session(training_session_id)
+        service.run_single_training_session(training_session_id)
         socketio.emit('update_training_data', 'Hey pal, update your UI!')
         return render_template('success.html')
 
@@ -168,6 +168,22 @@ def predict_dataset():
     try:
         json_request = json.loads(request.form['metadata'])
         service.predict_dataset(json_request)
+
+        return render_template('success.html')
+    except Exception as exception:
+        print(exception)
+        pass
+
+    return render_template('test_index.html')
+
+
+@app.route('/predict_image', methods=['GET', 'POST'])
+def predict_image():
+    try:
+        raw_image = request.files['image']
+        json_request = json.loads(request.form['metadata'])
+
+        service.predict_single_image(json_request, raw_image)
 
         return render_template('success.html')
     except Exception as exception:
