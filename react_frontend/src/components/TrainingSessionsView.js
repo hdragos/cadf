@@ -1,8 +1,59 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle, wsAddress} from "./Constants";
-import {handleFormFileChange, handleFormFileContentChange, handleFormTextChange} from "./Utils";
+import {handleFormFileChange, handleFormTextChange} from "./Utils";
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
+
+class SingleImagePredictionForm extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+          rawImage: null
+        };
+
+        this.handleFormFileChange = handleFormFileChange.bind(this);
+    }
+
+    handleSubmit = (event) => {
+        const { rawImage } = this.state;
+        const { trainingSessionId } = this.props
+
+        let formData = new FormData();
+        let metadataDict = {"type": "predict_single_image", "data": {"training_session_id": trainingSessionId}};
+        formData.append('metadata', JSON.stringify(metadataDict));
+        formData.append('image', rawImage);
+
+        fetch(`${httpAddress}/predict_image`, {
+            mode: 'no-cors',
+            method: 'POST',
+            body: formData
+        })
+        //TO DO: Handle responses accordingly
+            .then((response) => {
+                console.log(`Received response: ${response}`);
+            })
+            .catch((error) => {
+                console.log("Error while fetching messages from the server. Reason: ", error)
+            });
+
+        event.preventDefault();
+    };
+
+    render() {
+        return <form
+            onSubmit={(event) => this.handleSubmit(event)}
+            encType="multipart/form-data"
+        >
+            <input
+                type="file"
+                onChange={(event) => this.handleFormFileChange(event, 'rawImage')}
+                name='rawImage'
+            />
+
+            <input type="submit" value="Submit"/>
+        </form>
+    }
+}
 
 class TrainingSessionView extends Component{
     constructor(props){
@@ -10,7 +61,7 @@ class TrainingSessionView extends Component{
     }
 
     render() {
-        const {trainingSession, handleRunTrainingSession, socket} = this.props;
+        const {trainingSession, handleRunTrainingSession, handleDeleteTrainingSession, socket} = this.props;
 
         return <div style={styles.trainingSessionView}>
             <p>TrainingSession ID: {trainingSession.id}</p>
@@ -20,6 +71,14 @@ class TrainingSessionView extends Component{
                 onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
                 Run training session
             </Button>
+            <Button
+                variant="danger"
+                onClick={() => handleDeleteTrainingSession(trainingSession.id)}>
+                Delete training session
+            </Button>
+            <SingleImagePredictionForm
+                trainingSessionId={trainingSession.id}
+            />
         </div>
     }
 }
@@ -39,7 +98,6 @@ class TrainingSessionForm extends Component {
 
         this.handleFormTextChange = handleFormTextChange.bind(this);
         this.handleFormFileChange = handleFormFileChange.bind(this);
-        this.handleFormFileContentChange = handleFormFileContentChange.bind(this);
     }
 
     handleSubmit = (event) => {
@@ -138,18 +196,33 @@ class TrainingSessionsView extends Component{
         );
     }
 
-    handleRunTrainignSession = (socket, trainingSessionId) => {
+    handleRunTrainingSession = (socket, trainingSessionId) => {
         socket.emit(
             'run_single_training_session',
             {
                 'training_session_id': trainingSessionId
             })
     }
+    
+    handleDeleteTrainingSession = (trainingSessionId) => {
+        fetch(`${httpAddress}/training_sessions/${trainingSessionId}`, {
+            mode: 'no-cors',
+            method: 'DELETE',
+        })
+        //TO DO: Handle responses accordingly
+            .then((response) => {
+                console.log(`Received response: ${response}`);
+            })
+            .catch((error) => {
+                console.log("Error while fetching messages from the server. Reason: ", error)
+            });
+    }
 
     render() {
         const {training_sessions} = this.props;
         const socket = this.socket
-        const handleRunTrainingSession = this.handleRunTrainignSession;
+        const handleRunTrainingSession = this.handleRunTrainingSession;
+        const handleDeleteTrainingSession = this.handleDeleteTrainingSession;
 
         return <div>
             <ul style={styles.training_sessionsList}>
@@ -157,6 +230,7 @@ class TrainingSessionsView extends Component{
                     <TrainingSessionView
                         trainingSession={trainingSession}
                         handleRunTrainingSession={handleRunTrainingSession}
+                        handleDeleteTrainingSession={handleDeleteTrainingSession}
                         socket={socket}
                     />
                 ))}
