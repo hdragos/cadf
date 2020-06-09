@@ -1,2 +1,4 @@
 .idea
 *.pyc
+*.odt
+doc_resources*
