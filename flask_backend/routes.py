@@ -116,10 +116,6 @@ def delete_training_session(training_session_id):
         print(exception)
         pass
 
-    return render_template('test_index.html')
-
-    pass
-
 
 @socketio.on('run_single_training_session')
 def handle_single_training_session(json_request):
@@ -182,7 +178,6 @@ def predict_image():
     try:
         raw_image = request.files['image']
         json_request = json.loads(request.form['metadata'])
-
         service.predict_single_image(json_request, raw_image)
 
         return render_template('success.html')

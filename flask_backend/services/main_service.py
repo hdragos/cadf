@@ -213,6 +213,32 @@ class MainService:
 
         tf.keras.backend.clear_session()
 
+    def run_prediction_single(self,
+            training_session: TrainingSession,
+            denoiser: Denoiser,
+            image
+    ):
+
+
+        print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
+        with open(denoiser.save_path) as denoiser_structure_file:
+            # Build the denoiser in memory
+            denoiser_structure_dict = json.load(denoiser_structure_file)
+            denoisers_module = importlib.import_module(self.DENOISERS_MODULE)
+            denoiser_class = getattr(denoisers_module, denoiser_structure_dict['type'])
+            denoiser_obj = denoiser_class(denoiser_structure_dict)
+
+            denoiser_obj.load(training_session.weights_save_path)
+            predicted_image = denoiser_obj.predict([image])
+
+            comparison_plot([
+                [predicted_image]
+            ])
+
+        tf.keras.backend.clear_session()
+
+
     def run_prediction_dataset(
             self,
             training_session: TrainingSession,
