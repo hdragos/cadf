@@ -22,7 +22,7 @@ migrate = Migrate(app, db)
 socketio = SocketIO(app)
 
 app.config['DATA_FOLDER'] = 'D:\\University\\DenoisingDegree\\flask_backend\\static'
-data_folders = ['DENOISERS', 'DATASETS', 'TRAINING_SESSIONS', 'LEARNING_STRATEGIES']
+data_folders = ['DENOISERS', 'DATASETS', 'TRAINING_SESSIONS', 'LEARNING_STRATEGIES', 'TEMP']
 for folder in data_folders:
     full_folder_path = os.path.join(app.config['DATA_FOLDER'], folder)
     if not os.path.isdir(full_folder_path):

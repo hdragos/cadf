@@ -150,9 +150,21 @@ class MainService:
         )
 
     def predict_single_image(self, json_request, raw_image):
-        image = raw_image
-        print("Predict single image endpoint hit")
-        pass
+        training_session_id = json_request['data']['training_session_id']
+
+        image_bytes = raw_image.read()
+        np_array_image = np.fromstring(image_bytes, np.uint8)
+        image = cv2.imdecode(np_array_image, cv2.IMREAD_GRAYSCALE)
+
+        training_session = TrainingSession.query.get(training_session_id)
+        denoiser = Denoiser.query.get(training_session.denoiser_id)
+
+        print("Predict single image endpoint hit, with training session id {0}".format(training_session_id))
+        self.run_prediction_single(
+            training_session,
+            denoiser,
+            image
+        )
 
     # TO DO: refactor, account 'Failed to get device attribute 13 for device 0' error
     def run_training_session(
@@ -214,11 +226,12 @@ class MainService:
         tf.keras.backend.clear_session()
 
     def run_prediction_single(self,
-            training_session: TrainingSession,
-            denoiser: Denoiser,
-            image
-    ):
+                              training_session: TrainingSession,
+                              denoiser: Denoiser,
+                              image
+                              ):
 
+        dataset_images = [image]
 
         print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
@@ -229,15 +242,17 @@ class MainService:
             denoiser_class = getattr(denoisers_module, denoiser_structure_dict['type'])
             denoiser_obj = denoiser_class(denoiser_structure_dict)
 
+            dataset_images = self.reshape_for_training(dataset_images, denoiser_obj.input_shape)
+
             denoiser_obj.load(training_session.weights_save_path)
-            predicted_image = denoiser_obj.predict([image])
+            predicted_image = denoiser_obj.predict(dataset_images)
 
             comparison_plot([
-                [predicted_image]
-            ])
+                predicted_image,
+            ],
+                elements_per_line=1)
 
         tf.keras.backend.clear_session()
-
 
     def run_prediction_dataset(
             self,
