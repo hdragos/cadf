@@ -9,7 +9,7 @@ import NavbarLink from 'react-bootstrap/Navbar'
 class ToolbarMenu extends Component {
     constructor(props){
         super(props);
-        this.fetchData = props.fetchData;
+        this.fetchData = props.fetchData.bind(this);
         this.state = {
             currentScreen: "home",
             denoisers: [],
@@ -42,9 +42,20 @@ class ToolbarMenu extends Component {
                                 style={styles.button}>TRAINING SESSIONS</NavbarLink>
                     </li>
                 </Navbar>
-                {(currentScreen === "datasets") && <DatasetsView datasets={datasets}/>}
-                {(currentScreen === "denoisers") && <DenoisersView denoisers={denoisers}/>}
-                {(currentScreen === "training_sessions" && <TrainingSessionsView training_sessions={training_sessions}/>)}
+                {(currentScreen === "datasets") &&
+                    <DatasetsView
+                        datasets={datasets}
+                    />}
+
+                {(currentScreen === "denoisers") &&
+                    <DenoisersView
+                        denoisers={denoisers}
+                    />}
+
+                {(currentScreen === "training_sessions" &&
+                    <TrainingSessionsView
+                        training_sessions={training_sessions}
+                    />)}
             </div>
         );
     }
