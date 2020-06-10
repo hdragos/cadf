@@ -206,7 +206,6 @@ class TrainingSessionsView extends Component{
     
     handleDeleteTrainingSession = (trainingSessionId) => {
         fetch(`${httpAddress}/training_sessions/${trainingSessionId}`, {
-            mode: 'no-cors',
             method: 'DELETE',
         })
         //TO DO: Handle responses accordingly
