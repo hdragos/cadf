@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
 import {handleFormTextChange, handleFormFileChange} from "./Utils";
+import Form from 'react-bootstrap/Form'
+import Button from "react-bootstrap/Button";
+
 
 class DatasetView extends Component{
     constructor(props){
@@ -56,34 +59,44 @@ class DatasetForm extends Component {
 
     render() {
 
-        return <form
+        return <Form
             onSubmit={(event) => this.handleSubmit(event)}
             style={styles.datasetPreview}
             encType="multipart/form-data"
         >
 
             <h1>Upload a new dataset:</h1>
-            <label>Name:</label>
-            <input
-                type="text"
-                value={this.state.datasetName}
-                onChange={(event) => this.handleFormTextChange(event, 'datasetName')}
-            />
+            <Form.Group>
+                <Form.Label>Name:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.datasetName}
+                    onChange={(event) => this.handleFormTextChange(event, 'datasetName')}
+                />
+            </Form.Group>
 
-            <label>Description:</label>
-            <input
-                type="text"
-                value={this.state.datasetDescription}
-                onChange={(event) => this.handleFormTextChange(event, 'datasetDescription')}
-            />
-            <input
-                type="file"
-                onChange={(event) => this.handleFormFileChange(event, 'datasetArchive')}
-                name='datasetArchive'
-            />
+            <Form.Group>
+                <Form.Label>Description:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.datasetDescription}
+                    onChange={(event) => this.handleFormTextChange(event, 'datasetDescription')}
+                />
+            </Form.Group>
 
-            <input type="submit" value="Submit"/>
-        </form>
+            <Form.Group>
+                <Form.Label>Dataset archive:</Form.Label>
+                <Form.Control
+                    type="file"
+                    onChange={(event) => this.handleFormFileChange(event, 'datasetArchive')}
+                    name='datasetArchive'
+                />
+            </Form.Group>
+
+            <Button  variant="primary" type="submit">
+                Create training session
+            </Button>
+        </Form>
     }
 }
 

@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
 import {handleFormFileChange, handleFormTextChange, handleFormFileContentChange} from "./Utils";
+import Form from 'react-bootstrap/Form'
+import Button from "react-bootstrap/Button";
 
 class DenoiserView extends Component{
     constructor(props){
@@ -73,31 +75,45 @@ class DenoiserForm extends Component {
     render() {
         const {fileReader} = this.state;
 
-        return <form onSubmit={(event) => this.handleSubmit(event)}
+        return <Form onSubmit={(event) => this.handleSubmit(event)}
             style={styles.denoiserPreview}
             encType="multipart/form-data"
             >
+
+
             <h1>Upload a new denoiser:</h1>
-            <label>Name:</label>
-            <input
-                type="text"
-                value={this.state.denoiserName}
-                onChange={(event) => this.handleFormTextChange(event, 'denoiserName')}
-            />
-            <label>Description:</label>
-            <input
-                type="text"
-                value={this.state.denoiserDescription}
-                onChange={(event) => this.handleFormTextChange(event, 'denoiserDescription')}
-            />
-            <label>Structure file:</label>
-            <input
-                type="file"
-                onChange={(event) => this.handleFormFileContentChange(event, 'denoiserStructureFile', 'denoiserStructure', fileReader)}
-                name='denoiserStructureFile'
-            />
-            <input type="submit" value="Submit"/>
-        </form>
+
+            <Form.Group>
+                <Form.Label>Name:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.denoiserName}
+                    onChange={(event) => this.handleFormTextChange(event, 'denoiserName')}
+                />
+            </Form.Group>
+
+            <Form.Group>
+                <Form.Label>Description:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.denoiserDescription}
+                    onChange={(event) => this.handleFormTextChange(event, 'denoiserDescription')}
+                />
+            </Form.Group>
+
+            <Form.Group>
+                <Form.Label>Structure file:</Form.Label>
+                <Form.Control
+                    type="file"
+                    onChange={(event) => this.handleFormFileContentChange(event, 'denoiserStructureFile', 'denoiserStructure', fileReader)}
+                    name='denoiserStructureFile'
+                />
+            </Form.Group>
+
+            <Button  variant="primary" type="submit">
+                Create training session
+            </Button>
+        </Form>
     }
 }
 

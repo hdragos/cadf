@@ -3,6 +3,7 @@ import {theme, httpAddress, listElementStyle, listContainerStyle, wsAddress} fro
 import {handleFormFileChange, handleFormTextChange} from "./Utils";
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 
 class SingleImagePredictionForm extends Component {
     constructor(props){
@@ -137,47 +138,66 @@ class TrainingSessionForm extends Component {
 
     render() {
 
-        return <form onSubmit={(event) => this.handleSubmit(event)}>
-            <h1>Upload a new Training session:</h1>
-            <label>Name:</label>
-            <input
-                type="text"
-                value={this.state.trainingSessionName}
-                onChange={(event) => this.handleFormTextChange(event, 'trainingSessionName')}
-            />
-            <label>Description:</label>
-            <input
-                type="text"
-                value={this.state.trainingSessionDescription}
-                onChange={(event) => this.handleFormTextChange(event, 'trainingSessionDescription')}
-            />
-            <label>Epochs:</label>
-            <input
-                type="text"
-                value={this.state.epochs}
-                onChange={(event) => this.handleFormTextChange(event, 'epochs')}
-            />
-            <label>Clean dataset id:</label>
-            <input
-                type="text"
-                value={this.state.cleanDatasetId}
-                onChange={(event) => this.handleFormTextChange(event, 'cleanDatasetId')}
-            />
-            <label>Noisy dataset id:</label>
-            <input
-                type="text"
-                value={this.state.noisyDatasetId}
-                onChange={(event) => this.handleFormTextChange(event, 'noisyDatasetId')}
-            />
-            <label>Denoiser id:</label>
-            <input
-                type="text"
-                value={this.state.denoiserId}
-                onChange={(event) => this.handleFormTextChange(event, 'denoiserId')}
-            />
+        return <Form onSubmit={(event) => this.handleSubmit(event)}>
+            <Form.Group>
+                <h1>Upload a new Training session:</h1>
+                <Form.Label>Name:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.trainingSessionName}
+                    onChange={(event) => this.handleFormTextChange(event, 'trainingSessionName')}
+                />
+            </Form.Group>
+            <Form.Group>
 
-            <input type="submit" value="Submit"/>
-        </form>
+            <Form.Label>Description:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.trainingSessionDescription}
+                    onChange={(event) => this.handleFormTextChange(event, 'trainingSessionDescription')}
+                />
+            </Form.Group>
+
+            <Form.Group>
+                <Form.Label>Epochs:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.epochs}
+                    onChange={(event) => this.handleFormTextChange(event, 'epochs')}
+                />
+            </Form.Group>
+
+            <Form.Group>
+                <Form.Label>Clean dataset id:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.cleanDatasetId}
+                    onChange={(event) => this.handleFormTextChange(event, 'cleanDatasetId')}
+                />
+            </Form.Group>
+
+            <Form.Group>
+                <Form.Label>Noisy dataset id:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.noisyDatasetId}
+                    onChange={(event) => this.handleFormTextChange(event, 'noisyDatasetId')}
+                />
+            </Form.Group>
+
+            <Form.Group>
+                <Form.Label>Denoiser id:</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={this.state.denoiserId}
+                    onChange={(event) => this.handleFormTextChange(event, 'denoiserId')}
+                />
+            </Form.Group>
+
+            <Button  variant="primary" type="submit">
+                Create training session
+            </Button>
+        </Form>
     }
 }
 
