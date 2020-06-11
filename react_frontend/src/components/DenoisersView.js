@@ -111,7 +111,7 @@ class DenoiserForm extends Component {
             </Form.Group>
 
             <Button  variant="primary" type="submit">
-                Create training session
+                Create denoiser
             </Button>
         </Form>
     }

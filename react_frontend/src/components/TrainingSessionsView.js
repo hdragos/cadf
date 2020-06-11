@@ -41,18 +41,22 @@ class SingleImagePredictionForm extends Component {
     };
 
     render() {
-        return <form
+        return <Form
             onSubmit={(event) => this.handleSubmit(event)}
             encType="multipart/form-data"
         >
-            <input
-                type="file"
-                onChange={(event) => this.handleFormFileChange(event, 'rawImage')}
-                name='rawImage'
-            />
+            <Form.Group>
+                <Form.Control
+                    type="file"
+                    onChange={(event) => this.handleFormFileChange(event, 'rawImage')}
+                    name='rawImage'
+                />
+            </Form.Group>
 
-            <input type="submit" value="Submit"/>
-        </form>
+            <Button  variant="primary" type="submit">
+                Denoise image
+            </Button>
+        </Form>
     }
 }
 
