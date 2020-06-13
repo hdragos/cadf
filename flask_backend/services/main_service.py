@@ -188,7 +188,6 @@ class MainService:
             image
         )
 
-    # TO DO: refactor, account 'Failed to get device attribute 13 for device 0' error
     def run_training_session(
             self,
             training_session: TrainingSession,
@@ -261,23 +260,17 @@ class MainService:
             dataset: Dataset,
             denoiser: Denoiser
     ):
-        start = 5
-        stop = 10
 
         print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-        with open(denoiser.save_path) as denoiser_structure_file:
-            # Build the denoiser in memory
-            denoiser_obj = self.build_denoiser_object(denoiser)
 
-            # Load the dataset
-            dataset_images = self.load_and_reshape_dataset(dataset, denoiser_obj.input_shape)
+        # Build the denoiser in memory
+        denoiser_obj = self.build_denoiser_object(denoiser)
 
-            denoiser_obj.load(training_session.weights_save_path)
-            predicted_images = denoiser_obj.predict(dataset_images[start:stop])
+        # Load the dataset
+        dataset_images = self.load_and_reshape_dataset(dataset, denoiser_obj.input_shape)
 
-            comparison_plot([
-                predicted_images
-            ])
+        denoiser_obj.load(training_session.weights_save_path)
+        predicted_images = denoiser_obj.predict(dataset_images)
 
         tf.keras.backend.clear_session()
