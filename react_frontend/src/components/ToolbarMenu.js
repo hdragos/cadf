@@ -4,8 +4,8 @@ import DatasetsView from "./DatasetsView"
 import DenoisersView from "./DenoisersView";
 import TrainingSessionsView from "./TrainingSessionsView"
 import Navbar from 'react-bootstrap/Navbar'
-import NavbarLink from 'react-bootstrap/Navbar'
 import { ReactComponent as AppIcon } from '../logo.svg';
+import {Nav} from "react-bootstrap";
 
 class ToolbarMenu extends Component {
     constructor(props){
@@ -27,27 +27,26 @@ class ToolbarMenu extends Component {
 
         return (
             <div>
-                <Navbar style={styles.toolbar}>
-                    <li>
-                        <AppIcon
-                            width="10%"
-                            height="10%"
-                            fill={theme.light}
-                        />
-                    </li>
-                    <li>
-                        <NavbarLink onClick={() => this.handleScreenChange("denoisers")}
-                                style={styles.button}>DENOISERS</NavbarLink>
-                    </li>
-                    <li>
-                        <NavbarLink onClick={() => this.handleScreenChange("datasets")}
-                                style={styles.button}>DATASETS</NavbarLink>
-                    </li>
-                    <li>
-                        <NavbarLink onClick={() => this.handleScreenChange("training_sessions")}
-                                style={styles.button}>TRAINING SESSIONS</NavbarLink>
-                    </li>
+                <Navbar bg="primary" variant="dark">
+                    <Nav>
+                        <Nav.Link
+                            onClick={() => this.handleScreenChange("denoisers")}>
+                            DENOISERS
+                        </Nav.Link>
+
+                        <Nav.Link
+                            onClick={() => this.handleScreenChange("datasets")}>
+                            DATASETS
+                        </Nav.Link>
+
+                        <Nav.Link
+                            onClick={() => this.handleScreenChange("training_sessions")}>
+                            TRAINING SESSIONS
+                        </Nav.Link>
+                    </Nav>
+
                 </Navbar>
+
                 {(currentScreen === "datasets") &&
                     <DatasetsView
                         datasets={datasets}
