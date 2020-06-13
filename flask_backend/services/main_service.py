@@ -149,6 +149,28 @@ class MainService:
             denoiser=denoiser
         )
 
+    def build_denoiser_object(
+            self,
+            trainable_denoiser: Denoiser
+    ):
+        with open(trainable_denoiser.save_path) as denoiser_structure_fp:
+            # Build the denoiser in memory
+            denoiser_structure_dict = json.load(denoiser_structure_fp)
+            denoisers_module = importlib.import_module(self.DENOISERS_MODULE)
+            denoiser_class = getattr(denoisers_module, denoiser_structure_dict['type'])
+            denoiser_obj = denoiser_class(denoiser_structure_dict)
+
+            return denoiser_obj
+
+    def load_and_reshape_dataset(
+            self,
+            dataset: Dataset,
+            input_shape
+    ):
+        dataset_images = self.load_image_dataset(dataset)
+        dataset_images = self.reshape_for_training(dataset_images, input_shape)
+        return dataset_images
+
     def predict_single_image(self, json_request, raw_image):
         training_session_id = json_request['data']['training_session_id']
 
@@ -185,63 +207,51 @@ class MainService:
         if trainable_denoiser.trainable is not True:
             raise Exception("Denoiser {0} is untrainable!".format(trainable_denoiser))
 
-        with open(trainable_denoiser.save_path) as denoiser_structure_fp:
-            # Build the denoiser in memory
-            denoiser_structure_dict = json.load(denoiser_structure_fp)
-            denoisers_module = importlib.import_module(self.DENOISERS_MODULE)
-            denoiser_class = getattr(denoisers_module, denoiser_structure_dict['type'])
-            denoiser_obj = denoiser_class(denoiser_structure_dict)
+        denoiser_obj = self.build_denoiser_object(trainable_denoiser)
 
-            print("Successfully built the denoiser {0}".format(trainable_denoiser.name))
+        print("Successfully built the denoiser {0}".format(trainable_denoiser.name))
 
-            # Load the clean dataset
-            clean_dataset_images = self.load_image_dataset(clean_dataset)
-            clean_dataset_images = self.reshape_for_training(clean_dataset_images, denoiser_obj.input_shape)
+        # Load the clean dataset
+        clean_dataset_images = self.load_and_reshape_dataset(clean_dataset, denoiser_obj.input_shape)
 
-            # Load the noisy dataset
-            noisy_dataset_images = self.load_image_dataset(noisy_dataset)
-            noisy_dataset_images = self.reshape_for_training(noisy_dataset_images, denoiser_obj.input_shape)
+        # Load the noisy dataset
+        noisy_dataset_images = self.load_and_reshape_dataset(noisy_dataset, denoiser_obj.input_shape)
 
-            print("Successfully loaded datasets: {0} and {1}".format(clean_dataset.name, noisy_dataset.name))
+        print("Successfully loaded datasets: {0} and {1}".format(clean_dataset.name, noisy_dataset.name))
 
-            weights_save_path = training_session.weights_save_path
-            denoiser_obj.train(
-                training_input_data=noisy_dataset_images,
-                training_output_data=clean_dataset_images,
-                epochs=training_session.epochs,
-                batch_size=1,
-                save_path=weights_save_path,
-                custom_callbacks=custom_callbacks
-            )
+        weights_save_path = training_session.weights_save_path
+        denoiser_obj.train(
+            training_input_data=noisy_dataset_images,
+            training_output_data=clean_dataset_images,
+            epochs=training_session.epochs,
+            batch_size=1,
+            save_path=weights_save_path,
+            custom_callbacks=custom_callbacks
+        )
 
         tf.keras.backend.clear_session()
 
     def run_prediction_single(self,
                               training_session: TrainingSession,
                               denoiser: Denoiser,
-                              image
-                              ):
+                              image):
 
         dataset_images = [image]
 
         print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-        with open(denoiser.save_path) as denoiser_structure_file:
-            # Build the denoiser in memory
-            denoiser_structure_dict = json.load(denoiser_structure_file)
-            denoisers_module = importlib.import_module(self.DENOISERS_MODULE)
-            denoiser_class = getattr(denoisers_module, denoiser_structure_dict['type'])
-            denoiser_obj = denoiser_class(denoiser_structure_dict)
+        # Build the denoiser in memory
+        denoiser_obj = self.build_denoiser_object(denoiser)
 
-            dataset_images = self.reshape_for_training(dataset_images, denoiser_obj.input_shape)
+        dataset_images = self.reshape_for_training(dataset_images, denoiser_obj.input_shape)
 
-            denoiser_obj.load(training_session.weights_save_path)
-            predicted_image = denoiser_obj.predict(dataset_images)
+        denoiser_obj.load(training_session.weights_save_path)
+        predicted_image = denoiser_obj.predict(dataset_images)
 
-            comparison_plot([
-                predicted_image,
-            ],
-                elements_per_line=1)
+        comparison_plot([
+            predicted_image,
+        ],
+            elements_per_line=1)
 
         tf.keras.backend.clear_session()
 
@@ -258,14 +268,10 @@ class MainService:
 
         with open(denoiser.save_path) as denoiser_structure_file:
             # Build the denoiser in memory
-            denoiser_structure_dict = json.load(denoiser_structure_file)
-            denoisers_module = importlib.import_module(self.DENOISERS_MODULE)
-            denoiser_class = getattr(denoisers_module, denoiser_structure_dict['type'])
-            denoiser_obj = denoiser_class(denoiser_structure_dict)
+            denoiser_obj = self.build_denoiser_object(denoiser)
 
-            # Load the clean dataset
-            dataset_images = self.load_image_dataset(dataset)
-            dataset_images = self.reshape_for_training(dataset_images, denoiser_obj.input_shape)
+            # Load the dataset
+            dataset_images = self.load_and_reshape_dataset(dataset, denoiser_obj.input_shape)
 
             denoiser_obj.load(training_session.weights_save_path)
             predicted_images = denoiser_obj.predict(dataset_images[start:stop])
