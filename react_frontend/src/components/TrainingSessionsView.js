@@ -4,6 +4,7 @@ import {handleFormFileChange, handleFormTextChange} from "./Utils";
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import {Col, Container, ListGroup, Row} from "react-bootstrap";
 
 class SingleImagePredictionForm extends Component {
     constructor(props){
@@ -205,6 +206,27 @@ class TrainingSessionForm extends Component {
     }
 }
 
+class TrainingSessionsListView extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const {training_sessions, socket, handleRunTrainingSession, handleDeleteTrainingSession} = this.props;
+
+        return<ListGroup>
+            {training_sessions.map(trainingSession => (
+                    <TrainingSessionView
+                        trainingSession={trainingSession}
+                        handleRunTrainingSession={handleRunTrainingSession}
+                        handleDeleteTrainingSession={handleDeleteTrainingSession}
+                        socket={socket}
+                    />
+                ))}
+        </ListGroup>
+    }
+}
+
 class TrainingSessionsView extends Component{
     constructor(props){
         super(props);
@@ -250,24 +272,21 @@ class TrainingSessionsView extends Component{
         const handleRunTrainingSession = this.handleRunTrainingSession;
         const handleDeleteTrainingSession = this.handleDeleteTrainingSession;
 
-        return <div>
-            <ul style={styles.training_sessionsList}>
-                {training_sessions.map(trainingSession => (
-                    <TrainingSessionView
-                        trainingSession={trainingSession}
+        return <Container>
+            <Row>
+                <Col>
+                    <TrainingSessionsListView
+                        training_sessions={training_sessions}
+                        socket={socket}
                         handleRunTrainingSession={handleRunTrainingSession}
                         handleDeleteTrainingSession={handleDeleteTrainingSession}
-                        socket={socket}
                     />
-                ))}
-            </ul>
-            <div>
-                <p>TrainingSession preview placeholder</p>
-            </div>
-            <div>
-                <TrainingSessionForm/>
-            </div>
-        </div>
+                </Col>
+                <Col>
+                    <TrainingSessionForm/>
+                </Col>
+            </Row>
+        </Container>
     }
 }
 

@@ -3,6 +3,7 @@ import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Consta
 import {handleFormFileChange, handleFormTextChange, handleFormFileContentChange} from "./Utils";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
+import {Col, Container, ListGroup, Row} from "react-bootstrap";
 
 class DenoiserView extends Component{
     constructor(props){
@@ -76,14 +77,12 @@ class DenoiserForm extends Component {
         const {fileReader} = this.state;
 
         return <Form onSubmit={(event) => this.handleSubmit(event)}
-            style={styles.denoiserPreview}
             encType="multipart/form-data"
             >
 
 
-            <h1>Upload a new denoiser:</h1>
-
             <Form.Group>
+                <h1>Upload a new denoiser:</h1>
                 <Form.Label>Name:</Form.Label>
                 <Form.Control
                     type="text"
@@ -117,6 +116,23 @@ class DenoiserForm extends Component {
     }
 }
 
+class DenoisersListView extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const {denoisers} = this.props;
+
+        return<ListGroup>
+            {denoisers.map(denoiser =>
+                (<ListGroup.Item>
+                    <DenoiserView denoiser={denoiser}/>
+                </ListGroup.Item>))
+            }
+        </ListGroup>
+    }
+}
 
 class DenoisersView extends Component{
     constructor(props){
@@ -130,16 +146,18 @@ class DenoisersView extends Component{
     render() {
         const {denoisers} = this.props;
 
-        return <div>
-            <ul style={styles.denoisersList}>
-                {denoisers.map(denoiser => (
-                    <DenoiserView
-                        denoiser={denoiser}
+        return <Container>
+            <Row>
+                <Col>
+                    <DenoisersListView
+                        denoisers={denoisers}
                     />
-                ))}
-            </ul>
-            <DenoiserForm/>
-        </div>
+                </Col>
+                <Col>
+                    <DenoiserForm/>
+                </Col>
+            </Row>
+        </Container>
     }
 }
 

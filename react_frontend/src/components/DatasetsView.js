@@ -3,6 +3,7 @@ import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Consta
 import {handleFormTextChange, handleFormFileChange} from "./Utils";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
+import {Col, Container, ListGroup, Row} from "react-bootstrap";
 
 
 class DatasetView extends Component{
@@ -61,10 +62,8 @@ class DatasetForm extends Component {
 
         return <Form
             onSubmit={(event) => this.handleSubmit(event)}
-            style={styles.datasetPreview}
             encType="multipart/form-data"
         >
-
             <h1>Upload a new dataset:</h1>
             <Form.Group>
                 <Form.Label>Name:</Form.Label>
@@ -100,6 +99,24 @@ class DatasetForm extends Component {
     }
 }
 
+class DatasetsListView extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const {datasets} = this.props;
+
+        return<ListGroup>
+            {datasets.map(dataset =>
+                (<ListGroup.Item>
+                    <DatasetView dataset={dataset}/>
+                </ListGroup.Item>))
+            }
+        </ListGroup>
+    }
+}
+
 class DatasetsView extends Component{
     constructor(props){
         super(props);
@@ -112,21 +129,18 @@ class DatasetsView extends Component{
     render() {
         const {datasets} = this.props;
 
-        return <div>
-            <ul style={styles.datasetsList}>
-                {datasets.map(dataset => (
-                    <DatasetView
-                        dataset={dataset}
+        return <Container>
+            <Row>
+                <Col>
+                    <DatasetsListView
+                        datasets={datasets}
                     />
-                ))}
-            </ul>
-            <div>
-                <p>Dataset preview placeholder</p>
-            </div>
-            <div>
-                <DatasetForm/>
-            </div>
-        </div>
+                </Col>
+                <Col>
+                    <DatasetForm/>
+                </Col>
+            </Row>
+        </Container>
     }
 }
 
