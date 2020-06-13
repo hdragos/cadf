@@ -61,6 +61,7 @@ class ToolbarMenu extends Component {
                 {(currentScreen === "training_sessions" &&
                     <TrainingSessionsView
                         training_sessions={training_sessions}
+                        fetchData={fetchData}
                     />)}
             </div>
         );

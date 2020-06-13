@@ -229,12 +229,15 @@ class TrainingSessionsView extends Component{
     }
     
     handleDeleteTrainingSession = (trainingSessionId) => {
+        const {fetchData} = this.props;
+
         fetch(`${httpAddress}/training_sessions/${trainingSessionId}`, {
             method: 'DELETE',
         })
         //TO DO: Handle responses accordingly
             .then((response) => {
                 console.log(`Received response: ${response}`);
+                fetchData('training_sessions');
             })
             .catch((error) => {
                 console.log("Error while fetching messages from the server. Reason: ", error)
