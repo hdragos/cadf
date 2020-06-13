@@ -31,8 +31,12 @@ class AppStore extends Component {
 
     render() {
         console.log(this.state);
+        const {denoisers, datasets, training_sessions} = this.state;
         return <ToolbarMenu
-            fetchData = {this.fetchData}
+            fetchData = {this.fetchData.bind(this)}
+            denoisers={denoisers}
+            datasets={datasets}
+            training_sessions={training_sessions}
         />
     }
 }

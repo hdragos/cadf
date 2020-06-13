@@ -5,16 +5,14 @@ import DenoisersView from "./DenoisersView";
 import TrainingSessionsView from "./TrainingSessionsView"
 import Navbar from 'react-bootstrap/Navbar'
 import NavbarLink from 'react-bootstrap/Navbar'
+import { ReactComponent as AppIcon } from '../logo.svg';
 
 class ToolbarMenu extends Component {
     constructor(props){
         super(props);
-        this.fetchData = props.fetchData.bind(this);
+        this.fetchData = props.fetchData;
         this.state = {
             currentScreen: "home",
-            denoisers: [],
-            datasets: [],
-            training_sessions: [],
         };
     }
 
@@ -24,11 +22,19 @@ class ToolbarMenu extends Component {
     };
 
     render() {
-        const {currentScreen, datasets, denoisers, training_sessions} = this.state;
+        const {currentScreen} = this.state;
+        const {datasets, denoisers, training_sessions, fetchData} = this.props;
 
         return (
             <div>
                 <Navbar style={styles.toolbar}>
+                    <li>
+                        <AppIcon
+                            width="10%"
+                            height="10%"
+                            fill={theme.light}
+                        />
+                    </li>
                     <li>
                         <NavbarLink onClick={() => this.handleScreenChange("denoisers")}
                                 style={styles.button}>DENOISERS</NavbarLink>
