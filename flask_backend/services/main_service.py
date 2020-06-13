@@ -1,4 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+
+import shutil
+
 from flask_backend.model import Denoiser, Dataset, TrainingSession, LearningStrategy
 import importlib
 import json
@@ -26,7 +29,6 @@ class MainService:
         self.Dataset = Dataset
         self.db = db
 
-        # TO DO: Clean up the files and then modify this
         self.DENOISERS_MODULE = 'flask_backend.denoise.autoencoder'
 
     @staticmethod
@@ -117,6 +119,8 @@ class MainService:
 
     def delete_training_session(self, training_session_id):
         training_session = self.TrainingSession.query.get(training_session_id)
+        training_session_save_path = os.path.join(self.app.config['TRAINING_SESSIONS'], training_session.name)
+        shutil.rmtree(training_session_save_path)
         self.db.session.delete(training_session)
         self.db.session.commit()
 
