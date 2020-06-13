@@ -1,12 +1,5 @@
-import zipfile
-from flask_backend.denoise.noise_utils import GaussianNoiseGenerator2D
 import numpy as np
-import os
-import cv2
 import matplotlib.pyplot as plt
-from matplotlib.image import imsave
-from zipfile import ZipFile
-import shutil
 
 EPOCHS = 20
 BATCH_SIZE = 5
@@ -18,25 +11,15 @@ SAVE_FOLDER_NOISY = "mnist_noisy"
 SAVE_FOLDER_CLEAN = "mnist_clean"
 
 
-def comparison_plot(line_array, elements_per_line=5):
+def comparison_plot(line_array, elements_per_line=5, val_min=0, val_max=255):
     number_of_lines = len(line_array)
+    fig, axes = plt.subplots(number_of_lines, elements_per_line, figsize=(56, 56))
 
+    plt.subplots_adjust(top=1.2)
+    plt.gray()
     for i in range(number_of_lines):
         for j in range(elements_per_line):
-            index = j + i*elements_per_line + 1
-            ax = plt.subplot(number_of_lines, elements_per_line, index)
-            ax.set_axis_off()
-            plt.imshow(np.array(line_array[i][j]).squeeze())
-            plt.gray()
+            axes[i, j].set_axis_off()
+            axes[i, j].imshow(np.array(line_array[i][j]).squeeze(), vmin=val_min, vmax=val_max)
 
-    plt.savefig("plot.png")
-
-
-def rescale_to_given_range(image, max_new=255, min_new=0):
-    min_val = np.amin(image)
-    max_val = np.amax(image)
-
-    image = image * max_new
-    image = image / max_val
-
-    return image
+    plt.savefig("plot.png", bbox_inches='tight')
