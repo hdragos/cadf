@@ -214,15 +214,6 @@ class MainService:
                 custom_callbacks=custom_callbacks
             )
 
-            n = 5
-            cleaned_images = denoiser_obj.predict(noisy_dataset_images[:n])
-            comparison_plot([
-                clean_dataset_images[:n],
-                noisy_dataset_images[:n],
-                cleaned_images[:n]
-            ],
-                elements_per_line=5)
-
         tf.keras.backend.clear_session()
 
     def run_prediction_single(self,
