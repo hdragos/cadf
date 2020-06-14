@@ -19,7 +19,19 @@ class DatasetView extends Component{
                 <p>Dataset ID: {dataset.id}</p>
             </Row>
             <Row>
-             <p>Dataset name: {dataset.name}</p>
+                <p>Dataset name: {dataset.name}</p>
+            </Row>
+            <Row>
+                <Button
+                    variant="primary">
+                    Download dataset
+                </Button>
+            </Row>
+            <Row>
+                <Button
+                    variant="danger">
+                    Delete dataset
+                </Button>
             </Row>
         </Container>
     }
