@@ -13,11 +13,17 @@ class DenoiserView extends Component{
     render() {
         const {denoiser} = this.props;
 
-        return <div style={styles.denoiserView}>
-            <p>Denoiser ID: {denoiser.id}</p>
-            <p>Denoiser name: {denoiser.name}</p>
-            <p>Denoiser description: {denoiser.description}</p>
-        </div>
+        return <Container style={styles.denoiserView}>
+            <Row>
+                <p>Denoiser ID: {denoiser.id}</p>
+            </Row>
+            <Row>
+                <p>Denoiser name: {denoiser.name}</p>
+            </Row>
+            <Row>
+                <p>Denoiser description: {denoiser.description}</p>
+            </Row>
+        </Container>
     }
 }
 
@@ -146,7 +152,7 @@ class DenoisersView extends Component{
     render() {
         const {denoisers} = this.props;
 
-        return <Container>
+        return <Container fluid="lg">
             <Row>
                 <Col>
                     <DenoisersListView

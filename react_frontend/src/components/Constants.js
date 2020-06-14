@@ -23,9 +23,7 @@ const listElementStyle = {
     fontFamily: 'Lucida Console',
     backgroundColor: theme.dark,
     borderRadius: '15px',
-    padding: '5px',
-    margin: '5px',
-    width: '95%',
+    padding: '2em'
 };
 
 export {theme, serverAddress, httpAddress, wsAddress, listContainerStyle, listElementStyle}

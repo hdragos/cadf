@@ -14,10 +14,14 @@ class DatasetView extends Component{
     render() {
         const {dataset} = this.props;
 
-        return <div style={styles.datasetView}>
-            <p>Dataset ID: {dataset.id}</p>
-            <p>Dataset name: {dataset.name}</p>
-        </div>
+        return <Container style={styles.datasetView}>
+            <Row>
+                <p>Dataset ID: {dataset.id}</p>
+            </Row>
+            <Row>
+             <p>Dataset name: {dataset.name}</p>
+            </Row>
+        </Container>
     }
 }
 
@@ -129,7 +133,7 @@ class DatasetsView extends Component{
     render() {
         const {datasets} = this.props;
 
-        return <Container>
+        return <Container fluid="lg">
             <Row>
                 <Col>
                     <DatasetsListView

@@ -46,17 +46,20 @@ class SingleImagePredictionForm extends Component {
             onSubmit={(event) => this.handleSubmit(event)}
             encType="multipart/form-data"
         >
-            <Form.Group>
-                <Form.Control
-                    type="file"
-                    onChange={(event) => this.handleFormFileChange(event, 'rawImage')}
-                    name='rawImage'
-                />
-            </Form.Group>
+            <Form.Row>
+                <Form.Group>
+                    <Form.Control
+                        type="file"
+                        onChange={(event) => this.handleFormFileChange(event, 'rawImage')}
+                        name='rawImage'
+                    />
+                </Form.Group>
 
-            <Button  variant="primary" type="submit">
-                Denoise image
-            </Button>
+                <Button  variant="primary" type="submit">
+                    Denoise image
+                </Button>
+            </Form.Row>
+
         </Form>
     }
 }
@@ -69,23 +72,33 @@ class TrainingSessionView extends Component{
     render() {
         const {trainingSession, handleRunTrainingSession, handleDeleteTrainingSession, socket} = this.props;
 
-        return <div style={styles.trainingSessionView}>
-            <p>TrainingSession ID: {trainingSession.id}</p>
-            <p>TrainingSession name: {trainingSession.name}</p>
-            <Button
-                variant="primary"
-                onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
-                Run training session
-            </Button>
-            <Button
-                variant="danger"
-                onClick={() => handleDeleteTrainingSession(trainingSession.id)}>
-                Delete training session
-            </Button>
-            <SingleImagePredictionForm
-                trainingSessionId={trainingSession.id}
-            />
-        </div>
+        return <Container style={styles.trainingSessionView}>
+            <Row>
+                <p>TrainingSession ID: {trainingSession.id}</p>
+            </Row>
+            <Row>
+                <p>TrainingSession name: {trainingSession.name}</p>
+            </Row>
+            <Row>
+                <Button
+                    variant="primary"
+                    onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
+                    Run training session
+                </Button>
+            </Row>
+            <Row>
+                <Button
+                    variant="danger"
+                    onClick={() => handleDeleteTrainingSession(trainingSession.id)}>
+                    Delete training session
+                </Button>
+            </Row>
+            <Row>
+                <SingleImagePredictionForm
+                    trainingSessionId={trainingSession.id}
+                />
+            </Row>
+        </Container>
     }
 }
 
@@ -145,7 +158,7 @@ class TrainingSessionForm extends Component {
 
         return <Form onSubmit={(event) => this.handleSubmit(event)}>
             <Form.Group>
-                <h1>Upload a new Training session:</h1>
+                <h1>Create a new training session:</h1>
                 <Form.Label>Name:</Form.Label>
                 <Form.Control
                     type="text"
@@ -216,12 +229,14 @@ class TrainingSessionsListView extends Component {
 
         return<ListGroup>
             {training_sessions.map(trainingSession => (
-                    <TrainingSessionView
-                        trainingSession={trainingSession}
-                        handleRunTrainingSession={handleRunTrainingSession}
-                        handleDeleteTrainingSession={handleDeleteTrainingSession}
-                        socket={socket}
-                    />
+                    <ListGroup.Item>
+                        <TrainingSessionView
+                            trainingSession={trainingSession}
+                            handleRunTrainingSession={handleRunTrainingSession}
+                            handleDeleteTrainingSession={handleDeleteTrainingSession}
+                            socket={socket}
+                        />
+                    </ListGroup.Item>
                 ))}
         </ListGroup>
     }
@@ -272,7 +287,7 @@ class TrainingSessionsView extends Component{
         const handleRunTrainingSession = this.handleRunTrainingSession;
         const handleDeleteTrainingSession = this.handleDeleteTrainingSession;
 
-        return <Container>
+        return <Container fluid="lg">
             <Row>
                 <Col>
                     <TrainingSessionsListView
