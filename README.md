@@ -1,7 +1,7 @@
 # Convolutional autoencoder denoising framework
 
 ## What is this
-CADF (Convolutional autoencoder denoising framework) is a web application that permits the denoising of images using
+AutoDenf (Convolutional autoencoder denoising framework) is a web application that permits the denoising of images using
 convolutional autencoders. It also can manage datasets and convolutional autoencoders.
 
 This web application uses a client-server architecture.
@@ -32,6 +32,15 @@ flask db upgrade
 ```
 
 This will generate a new folder called `migrations` and a new file called `DenoisingServer.db`.
+
+In order to run the Flask server, you will need to create a virtual environment and install all of the requirements from
+`requirements.txt`. To do that, just run the following commands:
+```
+cd flask_backend
+python3 -m venv autodenf_env
+source autodenf_env/bin/activate  
+pip install -r requirements.txt
+```
 
 The root file for the server is `__init__.py`.
 
