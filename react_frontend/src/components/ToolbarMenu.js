@@ -4,8 +4,8 @@ import DatasetsView from "./DatasetsView"
 import DenoisersView from "./DenoisersView";
 import TrainingSessionsView from "./TrainingSessionsView"
 import Navbar from 'react-bootstrap/Navbar'
-import { ReactComponent as AppIcon } from '../logo.svg';
 import {Nav} from "react-bootstrap";
+import LogoComponent from "./LogoComponent";
 
 class ToolbarMenu extends Component {
     constructor(props){
@@ -29,6 +29,9 @@ class ToolbarMenu extends Component {
             <div>
                 <Navbar bg="primary" variant="dark">
                     <Nav>
+                        <Navbar.Brand>
+                            <LogoComponent/>
+                        </Navbar.Brand>
                         <Nav.Link
                             onClick={() => this.handleScreenChange("denoisers")}>
                             DENOISERS
