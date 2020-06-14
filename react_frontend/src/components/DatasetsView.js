@@ -22,6 +22,9 @@ class DatasetView extends Component{
                 <p>Dataset name: {dataset.name}</p>
             </Row>
             <Row>
+                <p>Dataset description: {dataset.description}</p>
+            </Row>
+            <Row>
                 <Button
                     variant="primary">
                     Download dataset
