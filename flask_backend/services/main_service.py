@@ -10,7 +10,6 @@ import numpy as np
 from zipfile import ZipFile
 import tensorflow as tf
 
-from flask_backend.utils import comparison_plot
 from flask_backend.model import Denoiser, Dataset, TrainingSession, LearningStrategy
 
 
@@ -154,6 +153,16 @@ class MainService:
             denoiser=denoiser
         )
 
+    def save_predicted_image(
+            self,
+            image,
+            training_session: TrainingSession
+    ):
+        image_hash = hashlib.md5(image.tobytes()).hexdigest()
+        image_path = os.path.join(self.app.config['TEMP'], '{0}_{1}.png'.format(training_session.name, image_hash))
+        cv2.imwrite(image_path, image)
+        return image_path
+
     def build_denoiser_object(
             self,
             trainable_denoiser: Denoiser
@@ -187,7 +196,7 @@ class MainService:
         denoiser = Denoiser.query.get(training_session.denoiser_id)
 
         print("Predict single image endpoint hit, with training session id {0}".format(training_session_id))
-        self.run_prediction_single(
+        return self.run_prediction_single(
             training_session,
             denoiser,
             image
@@ -251,13 +260,11 @@ class MainService:
 
         denoiser_obj.load(training_session.weights_save_path)
         predicted_image = denoiser_obj.predict(dataset_images)
-
-        comparison_plot([
-            predicted_image,
-        ],
-            elements_per_line=1)
+        predicted_image = predicted_image.squeeze()
 
         tf.keras.backend.clear_session()
+
+        return self.save_predicted_image(predicted_image, training_session)
 
     def run_prediction_dataset(
             self,

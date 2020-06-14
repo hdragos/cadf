@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import request, render_template, send_file
 import json
 import os
 
@@ -178,7 +178,9 @@ def predict_image():
     try:
         raw_image = request.files['image']
         json_request = json.loads(request.form['metadata'])
-        service.predict_single_image(json_request, raw_image)
+        image_path = service.predict_single_image(json_request, raw_image)
+
+        return send_file(image_path)
 
         return render_template('success.html')
     except Exception as exception:
