@@ -23,6 +23,18 @@ class DenoiserView extends Component{
             <Row>
                 <p>Denoiser description: {denoiser.description}</p>
             </Row>
+            <Row>
+                <Button
+                    variant="primary">
+                    Download denoiser
+                </Button>
+            </Row>
+            <Row>
+                <Button
+                    variant="danger">
+                    Delete denoiser
+                </Button>
+            </Row>
         </Container>
     }
 }
