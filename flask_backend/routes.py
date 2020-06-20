@@ -71,15 +71,32 @@ def preview_training_sessions():
     return service.get_training_sessions()
 
 
-@app.route('/datasets/<dataset_name>', methods=['GET'])
-def preview_dataset(dataset_name):
-    pass
-
-
 @app.route('/training_sessions/<training_session_id>', methods=['DELETE'])
 def delete_training_session(training_session_id):
     try:
         service.delete_training_session(training_session_id)
+        return render_template('success.html')
+
+    except Exception as exception:
+        print(exception)
+        raise ExceptionResponse(message=str(exception))
+
+
+@app.route('/datasets/<dataset_id>', methods=['DELETE'])
+def delete_dataset(dataset_id):
+    try:
+        service.delete_dataset(dataset_id)
+        return render_template('success.html')
+
+    except Exception as exception:
+        print(exception)
+        raise ExceptionResponse(message=str(exception))
+
+
+@app.route('/denoisers/<denoiser_id>', methods=['DELETE'])
+def delete_denoiser(denoiser_id):
+    try:
+        service.delete_denoiser(denoiser_id)
         return render_template('success.html')
 
     except Exception as exception:

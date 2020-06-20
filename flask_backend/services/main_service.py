@@ -124,6 +124,20 @@ class MainService:
         self.db.session.delete(training_session)
         self.db.session.commit()
 
+    def delete_dataset(self, dataset_id):
+        dataset = self.Dataset.query.get(dataset_id)
+        dataset_save_path = os.path.join(self.app.config['DATASETS'], dataset.name)
+        shutil.rmtree(dataset_save_path)
+        self.db.session.delete(dataset)
+        self.db.session.commit()
+
+    def delete_denoiser(self, denoiser_id):
+        denoiser = self.Denoiser.query.get(denoiser_id)
+        denoiser_save_path = os.path.join(self.app.config['DENOISERS'], denoiser.name)
+        shutil.rmtree(denoiser_save_path)
+        self.db.session.delete(denoiser)
+        self.db.session.commit()
+
     def get_denoisers(self):
         denoisers = self.Denoiser.query.all()
         denoisers = [denoiser.as_dict() for denoiser in denoisers]
