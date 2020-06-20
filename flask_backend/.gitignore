@@ -4,6 +4,7 @@
 /static/DENOISERS
 /static/TRAINING_SESSIONS
 /static/LEARNING_STRATEGIES
+/static/TEMP
 
 # Database files
 *.db
