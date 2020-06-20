@@ -1,11 +1,11 @@
-from flask import request, render_template, send_file
+from flask import jsonify, request, render_template, send_file
 import json
-import os
 
 from flask_backend import db, app, socketio
 
-from flask_backend.model import Denoiser, Dataset, LearningStrategy, TrainingSession
+from flask_backend.model import Denoiser, Dataset, TrainingSession
 from flask_backend.services.main_service import MainService
+from flask_backend.exceptions import ExceptionResponse
 
 service = MainService(
     app=app,
@@ -16,9 +16,11 @@ service = MainService(
 )
 
 
-def prepare_save_path(path):
-    if not os.path.isdir(path):
-        os.mkdir(path)
+@app.errorhandler(ExceptionResponse)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 @app.route('/', methods=['GET'])
@@ -36,9 +38,7 @@ def create_denoiser():
         return render_template('success.html')
     except Exception as exception:
         print(exception)
-        pass
-
-    return render_template('test_index.html')
+        raise ExceptionResponse(message=str(exception))
 
 
 @app.route('/datasets', methods=['POST'])
@@ -53,37 +53,7 @@ def create_dataset():
         return render_template('success.html')
     except Exception as exception:
         print(exception)
-        pass
-
-    return render_template('test_index.html')
-
-
-@app.route('/learning_strategies', methods=['POST'])
-def create_learning_strategy():
-    try:
-        json_request = json.loads(request.form['metadata'])
-
-        learning_strategy_save_path = os.path.join(app.config['LEARNING_STRATEGIES'], json_request['data']['name'])
-        prepare_save_path(learning_strategy_save_path)
-
-        learning_strategy = LearningStrategy(
-            name=json_request['data']['name'],
-            description=json_request['data']['description'],
-            save_path=learning_strategy_save_path
-        )
-        db.session.add(learning_strategy)
-        with open(os.path.join(learning_strategy_save_path, "{0}.json".format(json_request['data']['name'])), 'w') as learning_strategy_structure_file:
-            json.dump(json_request['data']['structure'], learning_strategy_structure_file)
-
-        print("Successfully saved learning strategy {0} in file.".format(json_request['data']['name']))
-        db.session.commit()
-
-        return render_template('success.html')
-    except Exception as exception:
-        print(exception)
-        pass
-
-    return render_template('test_index.html')
+        raise ExceptionResponse(message=str(exception))
 
 
 @app.route('/datasets', methods=['GET'])
@@ -114,7 +84,7 @@ def delete_training_session(training_session_id):
 
     except Exception as exception:
         print(exception)
-        pass
+        raise ExceptionResponse(message=str(exception))
 
 
 @socketio.on('run_single_training_session')
@@ -130,6 +100,7 @@ def handle_single_training_session(json_request):
 
     except Exception as exception:
         print(exception)
+        raise ExceptionResponse(message=str(exception))
 
 
 @app.route('/training_sessions/run/<training_session_id>', methods=['GET', 'POST'])
@@ -140,9 +111,7 @@ def run_single_training_session(training_session_id):
 
     except Exception as exception:
         print(exception)
-        pass
-
-    return render_template('test_index.html')
+        raise ExceptionResponse(message=str(exception))
 
 
 @app.route('/training_sessions', methods=['POST'])
@@ -154,9 +123,7 @@ def create_training_session():
         return render_template('success.html')
     except Exception as exception:
         print(exception)
-        pass
-
-    return render_template('test_index.html')
+        raise ExceptionResponse(message=str(exception))
 
 
 @app.route('/predict_dataset', methods=['GET', 'POST'])
@@ -168,9 +135,7 @@ def predict_dataset():
         return render_template('success.html')
     except Exception as exception:
         print(exception)
-        pass
-
-    return render_template('test_index.html')
+        raise ExceptionResponse(message=str(exception))
 
 
 @app.route('/predict_image', methods=['GET', 'POST'])
@@ -182,9 +147,6 @@ def predict_image():
 
         return send_file(image_path)
 
-        return render_template('success.html')
     except Exception as exception:
         print(exception)
-        pass
-
-    return render_template('test_index.html')
+        raise ExceptionResponse(message=str(exception))
