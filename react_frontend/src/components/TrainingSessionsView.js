@@ -4,13 +4,14 @@ import {handleFormFileChange, handleFormTextChange} from "./Utils";
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import {Col, Container, ListGroup, Row} from "react-bootstrap";
+import {Col, Container, ListGroup, Row, Spinner} from "react-bootstrap";
 
 class SingleImagePredictionForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-          rawImage: null
+          rawImage: null,
+          isLoading: false
         };
 
         this.handleFormFileChange = handleFormFileChange.bind(this);
@@ -25,27 +26,45 @@ class SingleImagePredictionForm extends Component {
         formData.append('metadata', JSON.stringify(metadataDict));
         formData.append('image', rawImage);
 
+        this.setState({isLoading: true});
+
         fetch(`${httpAddress}/predict_image`, {
             mode: 'no-cors',
             method: 'POST',
             body: formData
         })
-        //TO DO: Handle responses accordingly
-            .then((response) => {
-                console.log(`Received response: ${response}`);
+            .then((response) => response.blob())
+            .then((blob) => {
+                // TO DO: Replace this method with a less hack-ish one
+                // Idea by: https://medium.com/yellowcode/download-api-files-with-react-fetch-393e4dae0d9e
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const link = document.createElement('a');
+
+                link.href = url;
+                link.setAttribute('download', `sample.png`);
+
+                link.click();
+                link.parentNode.removeChild(link);
+
+                this.setState({isLoading: false});
+
             })
             .catch((error) => {
                 console.log("Error while fetching messages from the server. Reason: ", error)
+                this.setState({isLoading: false});
             });
 
         event.preventDefault();
     };
 
     render() {
+        const { isLoading } = this.state;
+
         return <Form
             onSubmit={(event) => this.handleSubmit(event)}
             encType="multipart/form-data"
         >
+
             <Form.Row>
                 <Form.Group>
                     <Form.Control
@@ -56,7 +75,16 @@ class SingleImagePredictionForm extends Component {
                 </Form.Group>
 
                 <Button  variant="primary" type="submit">
-                    Denoise image
+                    {isLoading ?
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        /> :
+                        "Denoise Image"
+                    }
                 </Button>
             </Form.Row>
 
