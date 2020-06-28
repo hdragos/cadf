@@ -112,7 +112,7 @@ class MainService:
         noisy_dataset = self.Dataset.query.get(training_session.noisy_dataset_id)
         trainable_denoiser = self.Denoiser.query.get(training_session.denoiser_id)
         socket_writer_callback = SocketIOTrainingCallback(response_socket)
-        db_updater_callback = TrainingSessionUpdaterCallback(training_session_id, self.TrainingSession)
+        db_updater_callback = TrainingSessionUpdaterCallback(training_session_id, self.TrainingSession, self.db)
 
         self.run_training_session(
             training_session=training_session,

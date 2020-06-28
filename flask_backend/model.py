@@ -77,7 +77,7 @@ class TrainingSession(db.Model):
     denoiser_id = db.Column(db.Integer, db.ForeignKey("denoiser.id"))
     learning_stategy_id = db.Column(db.Integer, db.ForeignKey("learning_strategy.id"), nullable=True)
     completed_epochs = db.Column(db.Integer, default=0)
-    last_loss = db.Column(db.Integer, default=2**30)
+    last_loss = db.Column(db.Float, default=2**30)
 
     def __repr__(self):
         return "<TrainingSession {0}>.".format(
