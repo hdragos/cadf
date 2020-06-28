@@ -10,6 +10,7 @@ import numpy as np
 from zipfile import ZipFile
 import tensorflow as tf
 
+from flask_backend.denoise.callbacks.callbacks import SocketIOTrainingCallback, TrainingSessionUpdaterCallback
 from flask_backend.model import Denoiser, Dataset, TrainingSession, LearningStrategy
 
 
@@ -104,18 +105,21 @@ class MainService:
         self.db.session.add(training_session)
         self.db.session.commit()
 
-    def run_single_training_session(self, training_session_id):
+    def run_single_training_session(self, training_session_id, response_socket):
         training_session = self.TrainingSession.query.get(training_session_id)
 
         clean_dataset = self.Dataset.query.get(training_session.clean_dataset_id)
         noisy_dataset = self.Dataset.query.get(training_session.noisy_dataset_id)
         trainable_denoiser = self.Denoiser.query.get(training_session.denoiser_id)
+        socket_writer_callback = SocketIOTrainingCallback(response_socket)
+        db_updater_callback = TrainingSessionUpdaterCallback(training_session_id, self.TrainingSession)
 
         self.run_training_session(
             training_session=training_session,
             clean_dataset=clean_dataset,
             noisy_dataset=noisy_dataset,
-            trainable_denoiser=trainable_denoiser)
+            trainable_denoiser=trainable_denoiser,
+            custom_callbacks=[socket_writer_callback, db_updater_callback])
 
     def delete_training_session(self, training_session_id):
         training_session = self.TrainingSession.query.get(training_session_id)

@@ -1,3 +1,5 @@
+import json
+
 from tensorflow.keras.callbacks import Callback
 
 
@@ -15,20 +17,22 @@ class LoggerCallback(Callback):
         print("Working on a new batch!")
 
 
-class SocketIOWriterCallback(Callback):
-    def __init__(self, socketio):
+class SocketIOTrainingCallback(Callback):
+    def __init__(self, socket):
         super().__init__()
-        self.socketio = socketio
-
-
-class SocketIOTrainingCallback(SocketIOWriterCallback):
-    def __init__(self, socketio):
-        super().__init__(socketio)
-
-    def on_epoch_begin(self, epoch, logs=None):
-        
-        pass
+        self.socket = socket
 
     def on_epoch_end(self, epoch, logs=None):
+        socket_response_dict = {'epoch': epoch, 'loss': logs['loss']}
+        print('Sending {0} back to client...'.format(socket_response_dict))
+        self.socket.emit('update_training_data', json.dumps(socket_response_dict))
 
-        pass
+
+class TrainingSessionUpdaterCallback(Callback):
+    def __init__(self, training_session_id, training_session_model):
+        super().__init__()
+        self.training_session_id = training_session_id
+        self.training_session_model = training_session_model
+
+    def on_epoch_end(self, epoch, logs=None):
+        print('I should update the number of epochs...')

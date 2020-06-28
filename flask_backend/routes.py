@@ -131,9 +131,8 @@ def handle_single_training_session(json_request):
         print("Received a socket.io event with the data={0}".format(json_request))
 
         training_session_id = json_request['training_session_id']
-        service.run_single_training_session(training_session_id)
-        socketio.emit('update_training_data', 'Hey pal, update your UI!')
-        return render_template('success.html')
+        service.run_single_training_session(training_session_id, socketio)
+        #socketio.emit('update_training_data', 'Hey pal, update your UI!')
 
     except Exception as exception:
         print(exception)

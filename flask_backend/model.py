@@ -76,6 +76,8 @@ class TrainingSession(db.Model):
     noisy_dataset_id = db.Column(db.Integer, db.ForeignKey("dataset.id"))
     denoiser_id = db.Column(db.Integer, db.ForeignKey("denoiser.id"))
     learning_stategy_id = db.Column(db.Integer, db.ForeignKey("learning_strategy.id"), nullable=True)
+    completed_epochs = db.Column(db.Integer, default=0)
+    last_loss = db.Column(db.Integer, default=2**30)
 
     def __repr__(self):
         return "<TrainingSession {0}>.".format(
@@ -89,6 +91,8 @@ class TrainingSession(db.Model):
             'epochs': self.epochs,
             'clean_dataset_id': self.clean_dataset_id,
             'noisy_dataset_id': self.noisy_dataset_id,
-            'denoiser_id': self.denoiser_id
+            'denoiser_id': self.denoiser_id,
+            'completed_epochs': self.completed_epochs,
+            'last_loss': self.last_loss
         }
         return training_session_dict
