@@ -29,6 +29,26 @@ def handle_index():
     return render_template('index.html')
 
 
+@app.route('/download/denoisers/<denoiser_id>', methods=['GET'])
+def downlaod_denoiser(denoiser_id):
+    try:
+        denoiser_path = service.download_denoiser(denoiser_id)
+        return send_file(denoiser_path)
+    except Exception as exception:
+        print(exception)
+        raise ExceptionResponse(message=str(exception))
+
+
+@app.route('/download/datasets/<dataset_id>', methods=['GET'])
+def download_dataset(dataset_id):
+    try:
+        dataset_path = service.download_dataset(dataset_id)
+        return send_file(dataset_path)
+    except Exception as exception:
+        print(exception)
+        raise ExceptionResponse(message=str(exception))
+
+
 @app.route('/denoisers', methods=['POST'])
 def create_denoiser():
     try:

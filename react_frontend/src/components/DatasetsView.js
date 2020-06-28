@@ -1,18 +1,43 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
-import {handleFormTextChange, handleFormFileChange} from "./Utils";
+import {handleFormTextChange, handleFormFileChange, downloadBinaryData} from "./Utils";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
-import {Col, Container, ListGroup, Row} from "react-bootstrap";
+import {Col, Container, ListGroup, Row, Spinner} from "react-bootstrap";
 
 
 class DatasetView extends Component{
+    downloadDataset = () => {
+        const {dataset} = this.props;
+        this.setState({isLoading: true});
+
+        fetch(`${httpAddress}/download/datasets/${dataset.id}`, {
+            mode: 'no-cors',
+            method: 'GET',
+        })
+            .then((response) => response.blob())
+            .then((blob) => {
+                downloadBinaryData(blob, 'zip', `${dataset.name}`)
+
+                this.setState({isLoading: false});
+
+            })
+            .catch((error) => {
+                console.log("Error while fetching messages from the server. Reason: ", error)
+                this.setState({isLoading: false});
+            });
+    };
+
     constructor(props){
         super(props);
+        this.state = {
+            isLoading: false,
+        }
     }
 
     render() {
         const {dataset} = this.props;
+        const {isLoading} = this.props;
 
         return <Container style={styles.datasetView}>
             <Row>
@@ -25,9 +50,17 @@ class DatasetView extends Component{
                 <p>Dataset description: {dataset.description}</p>
             </Row>
             <Row>
-                <Button
-                    variant="primary">
-                    Download dataset
+                <Button  variant="primary" type="submit" onClick={()=>this.downloadDataset()}>
+                    {isLoading ?
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        /> :
+                        "Download dataset"
+                    }
                 </Button>
             </Row>
             <Row>

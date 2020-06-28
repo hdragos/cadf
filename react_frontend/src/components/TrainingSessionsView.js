@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle, wsAddress} from "./Constants";
-import {handleFormFileChange, handleFormTextChange} from "./Utils";
+import {downloadBinaryData, handleFormFileChange, handleFormTextChange} from "./Utils";
 import io from 'socket.io-client'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
@@ -35,16 +35,7 @@ class SingleImagePredictionForm extends Component {
         })
             .then((response) => response.blob())
             .then((blob) => {
-                // TO DO: Replace this method with a less hack-ish one
-                // Idea by: https://medium.com/yellowcode/download-api-files-with-react-fetch-393e4dae0d9e
-                const url = window.URL.createObjectURL(new Blob([blob]));
-                const link = document.createElement('a');
-
-                link.href = url;
-                link.setAttribute('download', `sample.png`);
-
-                link.click();
-                link.parentNode.removeChild(link);
+                downloadBinaryData(blob, 'png', 'denoised_image')
 
                 this.setState({isLoading: false});
 

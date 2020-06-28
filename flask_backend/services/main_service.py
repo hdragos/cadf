@@ -300,3 +300,12 @@ class MainService:
         predicted_images = denoiser_obj.predict(dataset_images)
 
         tf.keras.backend.clear_session()
+
+    def download_dataset(self, dataset_id):
+        dataset = self.Dataset.query.get(dataset_id)
+        return dataset.save_path
+
+    def download_denoiser(self, denoiser_id):
+        denoiser = self.Denoiser.query.get(denoiser_id)
+        return denoiser.save_path
+

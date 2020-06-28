@@ -32,3 +32,15 @@ export function handleFormFileContentChange(event, fileStateName, contentStateNa
     event.preventDefault();
 }
 
+export function downloadBinaryData(blob, extension, filename='sample') {
+    // TO DO: Replace this method with a less hack-ish one
+    // Idea by: https://medium.com/yellowcode/download-api-files-with-react-fetch-393e4dae0d9e
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `${filename}.${extension}`);
+
+    link.click();
+    link.parentNode.removeChild(link);
+}

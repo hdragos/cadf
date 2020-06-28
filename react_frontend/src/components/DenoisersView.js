@@ -1,17 +1,43 @@
 import React, {Component} from 'react'
 import {theme, httpAddress, listElementStyle, listContainerStyle} from "./Constants";
-import {handleFormFileChange, handleFormTextChange, handleFormFileContentChange} from "./Utils";
+import {handleFormFileChange, handleFormTextChange, handleFormFileContentChange, downloadBinaryData} from "./Utils";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
-import {Col, Container, ListGroup, Row} from "react-bootstrap";
+import {Col, Container, ListGroup, Row, Spinner} from "react-bootstrap";
 
 class DenoiserView extends Component{
+    downloadDenoiser = () => {
+        const {denoiser} = this.props;
+        this.setState({isLoading: true});
+
+        fetch(`${httpAddress}/download/denoisers/${denoiser.id}`, {
+            mode: 'no-cors',
+            method: 'GET',
+        })
+            .then((response) => response.blob())
+            .then((blob) => {
+                downloadBinaryData(blob, 'json', `${denoiser.name}`)
+
+                this.setState({isLoading: false});
+
+            })
+            .catch((error) => {
+                console.log("Error while fetching messages from the server. Reason: ", error)
+                this.setState({isLoading: false});
+            });
+    };
+
     constructor(props){
         super(props);
+
+        this.state = {
+            isLoading: false,
+        }
     }
 
     render() {
         const {denoiser} = this.props;
+        const {isLoading} = this.state;
 
         return <Container style={styles.denoiserView}>
             <Row>
@@ -24,9 +50,17 @@ class DenoiserView extends Component{
                 <p>Denoiser description: {denoiser.description}</p>
             </Row>
             <Row>
-                <Button
-                    variant="primary">
-                    Download denoiser
+                <Button  variant="primary" type="submit" onClick={()=>this.downloadDenoiser()}>
+                    {isLoading ?
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        /> :
+                        "Download denoiser"
+                    }
                 </Button>
             </Row>
             <Row>
