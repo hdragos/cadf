@@ -23,16 +23,6 @@ npm run-script build
 The backend is written in Python using the Flask web framework and Keras (with Tensorflow backend) for the deep learning
 part.
 
-In order to initialize the database, you wil need to 
-```
-cd flask_backend
-flask db init 
-flask db migrate
-flask db upgrade
-```
-
-This will generate a new folder called `migrations` and a new file called `DenoisingServer.db`.
-
 In order to run the Flask server, you will need to create a virtual environment and install all of the requirements from
 `requirements.txt`. To do that, just run the following commands:
 ```
@@ -44,6 +34,16 @@ pip install -r requirements.txt
 
 The root file for the server is `__init__.py`.
 
+In order to initialize the database, you wil need to set the `FLASK_APP`
+ environment variable to `__init__.py` and run the following commands:
+```
+cd flask_backend
+flask db init 
+flask db migrate
+flask db upgrade
+```
+
+This will generate a new folder called `migrations` and a new file called `DenoisingServer.db`.
 
 ## Documentation
 
