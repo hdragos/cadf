@@ -145,7 +145,8 @@ class TrainingSessionForm extends Component {
     }
 
     handleSubmit = (event) => {
-        const { trainingSessionName, trainingSessionDescription, epochs, cleanDatasetId, noisyDatasetId, denoiserId, learningStrategyId } = this.state;
+        const { fetchData } = this.props;
+        const { trainingSessionName, trainingSessionDescription, epochs, cleanDatasetId, noisyDatasetId, denoiserId, learningStrategyId } = this.state
 
         let formData = new FormData();
         let metadataDict =
@@ -172,6 +173,7 @@ class TrainingSessionForm extends Component {
         //TO DO: Handle responses accordingly
             .then((response) => {
                 console.log(`Received response: ${response}`);
+                fetchData('training_sessions');
             })
             .catch((error) => {
                 console.log("Error while fetching messages from the server. Reason: ", error)
@@ -307,7 +309,7 @@ class TrainingSessionsView extends Component{
     }
 
     render() {
-        const {training_sessions} = this.props;
+        const {training_sessions, fetchData} = this.props;
         const socket = this.socket
         const handleRunTrainingSession = this.handleRunTrainingSession;
         const handleDeleteTrainingSession = this.handleDeleteTrainingSession;
@@ -323,7 +325,9 @@ class TrainingSessionsView extends Component{
                     />
                 </Col>
                 <Col>
-                    <TrainingSessionForm/>
+                    <TrainingSessionForm
+                        fetchData={fetchData}
+                    />
                 </Col>
             </Row>
         </Container>
