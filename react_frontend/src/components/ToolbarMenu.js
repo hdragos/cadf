@@ -53,11 +53,13 @@ class ToolbarMenu extends Component {
                 {(currentScreen === "datasets") &&
                     <DatasetsView
                         datasets={datasets}
+                        fetchData={fetchData}
                     />}
 
                 {(currentScreen === "denoisers") &&
                     <DenoisersView
                         denoisers={denoisers}
+                        fetchData={fetchData}
                     />}
 
                 {(currentScreen === "training_sessions" &&

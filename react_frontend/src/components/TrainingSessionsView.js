@@ -99,6 +99,12 @@ class TrainingSessionView extends Component{
                 <p>TrainingSession name: {trainingSession.name}</p>
             </Row>
             <Row>
+                <p>Completed epochs: {trainingSession.completed_epochs} out of {trainingSession.epochs}</p>
+            </Row>
+            <Row>
+                <p>Last loss: {trainingSession.last_loss}</p>
+            </Row>
+            <Row>
                 <Button
                     variant="primary"
                     onClick={() => handleRunTrainingSession(socket, trainingSession.id)}>
